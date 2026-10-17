@@ -1926,585 +1926,204 @@
 }
 
 /* ==========================================================================
-   9. LUXURY EDITORIAL AUTOMOTIVE FOOTER
-   Obsidian Theme · Trust Accreditation · Stock Alerts · 5-Col Grid · CCCFA Compliance
+   9. CLEAN & SIMPLE SITE FOOTER
    ========================================================================== */
-.footer-luxury {
-  background: linear-gradient(180deg, #070B19 0%, #03060E 100%);
-  color: #F8FAFC;
-  border-top: 1px solid rgba(12, 153, 233, 0.25);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Background Ambient Lighting */
-.footer-luxury::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 20%;
-  width: 60%;
-  height: 250px;
-  background: radial-gradient(ellipse at top, rgba(12, 153, 233, 0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-/* 1. Partner Accreditation & Trust Strip */
-.footer-trust-strip {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding-block: var(--space-6);
-  background: rgba(255, 255, 255, 0.015);
-}
-
-.footer-trust-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: var(--space-4);
-}
-
-.footer-trust-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md);
-  transition: all 0.25s ease;
-}
-
-.footer-trust-item:hover {
-  background: rgba(12, 153, 233, 0.08);
-  border-color: rgba(12, 153, 233, 0.3);
-  transform: translateY(-1px);
-}
-
-.trust-badge-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: rgba(12, 153, 233, 0.15);
-  color: #0C99E9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.trust-badge-text {
-  display: flex;
-  flex-direction: column;
-}
-
-.trust-badge-title {
-  font-size: 0.8125rem;
-  font-weight: 700;
-  color: #FFFFFF;
-  letter-spacing: -0.01em;
-  white-space: nowrap;
-}
-
-.trust-badge-sub {
-  font-size: 0.6875rem;
+.site-footer {
+  background: #080B14;
   color: #94A3B8;
-  white-space: nowrap;
-}
-
-/* 2. Interactive VIP Stock & Low-Rate Alerts Card */
-.footer-alert-card {
-  margin-top: clamp(40px, 6vw, 64px);
-  padding: clamp(24px, 4vw, 36px);
-  background: linear-gradient(135deg, rgba(11, 4, 84, 0.75) 0%, rgba(12, 153, 233, 0.18) 100%);
-  border: 1px solid rgba(12, 153, 233, 0.35);
-  border-radius: var(--radius-lg);
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.6);
-}
-
-.footer-alert-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: clamp(24px, 4vw, 48px);
-  position: relative;
-  z-index: 2;
-}
-
-.footer-alert-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: #0C99E9;
-  background: rgba(12, 153, 233, 0.12);
-  border: 1px solid rgba(12, 153, 233, 0.25);
-  padding: 4px 12px;
-  border-radius: 9999px;
-  margin-bottom: 10px;
-}
-
-.footer-alert-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.25rem, 2vw, 1.625rem);
-  font-variation-settings: "wdth" 115, "wght" 700;
-  color: #FFFFFF;
-  line-height: 1.25;
-  margin: 0;
-}
-
-.footer-alert-desc {
-  color: #CBD5E1;
-  font-size: 0.875rem;
-  margin-top: 6px;
-  line-height: 1.5;
-  max-width: 52ch;
-}
-
-.footer-input-wrap {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.footer-email-input {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 9999px;
-  padding: 12px 22px;
-  color: #FFFFFF;
-  font-size: 0.875rem;
-  outline: none;
-  transition: all 0.2s ease;
-  min-width: 280px;
-}
-
-.footer-email-input::placeholder {
-  color: #94A3B8;
-}
-
-.footer-email-input:focus {
-  border-color: #0C99E9;
-  background: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 0 0 3px rgba(12, 153, 233, 0.25);
-}
-
-.footer-subscribe-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #0C99E9;
-  color: #0B0454;
-  font-weight: 700;
-  padding: 12px 24px;
-  border-radius: 9999px;
-  border: none;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s ease;
-}
-
-.footer-subscribe-btn:hover {
-  background: #38BDF8;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(12, 153, 233, 0.4);
-}
-
-.footer-form-subtext {
-  font-size: 0.6875rem;
-  color: #94A3B8;
-  margin-top: 8px;
-  display: block;
-}
-
-.footer-alert-success {
-  display: none;
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  border-radius: var(--radius-md);
-  padding: 14px 18px;
-}
-
-.footer-alert-success.is-active {
-  display: block;
-  animation: fadeIn 0.3s ease;
-}
-
-.success-icon-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #34D399;
-  font-weight: 700;
-  font-size: 0.875rem;
-  margin-bottom: 4px;
-}
-
-.footer-alert-success p {
-  color: #CBD5E1;
-  font-size: 0.8125rem;
-  margin: 0;
-}
-
-/* 3. Main 5-Column Navigation Grid */
-.footer-main-container {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding-top: clamp(48px, 6vw, 64px);
+  padding-bottom: clamp(24px, 4vw, 36px);
+  font-size: 0.875rem;
 }
 
-.footer-grid-5col {
+.footer-simple-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.2fr 1.6fr;
-  gap: clamp(24px, 3.5vw, 44px);
-  padding-bottom: clamp(40px, 5vw, 60px);
+  grid-template-columns: 1.5fr 1fr 1.2fr 1.2fr;
+  gap: clamp(24px, 4vw, 48px);
+  padding-bottom: clamp(32px, 5vw, 44px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.footer-brand-logo {
+.footer-logo {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   text-decoration: none;
+  margin-bottom: 12px;
 }
 
-.footer-brand-title {
+.footer-brand-name {
   color: #FFFFFF !important;
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
 }
 
-.footer-brand-sub {
+.footer-brand-tag {
   color: #0C99E9 !important;
   font-size: 0.6875rem;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
 }
 
-.footer-dealership-blurb {
-  font-size: 0.8125rem;
+.footer-simple-tagline {
   color: #94A3B8;
-  line-height: 1.6;
-  margin-top: 14px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin-bottom: 16px;
   max-width: 32ch;
 }
 
-.footer-forecourt-badge {
+.footer-quick-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.8125rem;
+}
+
+.footer-contact-link {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.75rem;
-  color: #A7F3D0;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  border-radius: 9999px;
-  padding: 4px 12px;
-  margin-top: 14px;
-}
-
-.footer-social-row {
-  display: flex;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.footer-social-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   color: #CBD5E1;
-  transition: all 0.2s ease;
   text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
-.footer-social-icon:hover {
-  background: #0C99E9;
-  border-color: #0C99E9;
-  color: #0B0454;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(12, 153, 233, 0.4);
+.footer-contact-link:hover {
+  color: #0C99E9;
 }
 
-.footer-heading-luxury {
+.footer-contact-link svg,
+.footer-contact-text svg {
+  color: #0C99E9;
+  flex-shrink: 0;
+}
+
+.footer-contact-text {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #94A3B8;
+  line-height: 1.4;
+}
+
+.footer-simple-title {
   font-family: var(--font-display);
   font-size: 0.8125rem;
   font-variation-settings: "wdth" 120, "wght" 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: #FFFFFF;
-  margin-bottom: 20px;
-  position: relative;
-  padding-bottom: 8px;
+  margin-bottom: 16px;
 }
 
-.footer-heading-luxury::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 22px;
-  height: 2px;
-  background: #0C99E9;
-  border-radius: 2px;
-}
-
-.footer-nav-list {
+.footer-simple-list {
   list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 11px;
-  margin: 0;
-  padding: 0;
+  gap: 10px;
 }
 
-.footer-nav-list a {
-  font-size: 0.8125rem;
+.footer-simple-list a {
   color: #94A3B8;
   text-decoration: none;
+  font-size: 0.8125rem;
   transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  display: inline-block;
   cursor: pointer;
 }
 
-.footer-nav-list a:hover {
+.footer-simple-list a:hover {
   color: #38BDF8;
-  transform: translateX(3px);
+  transform: translateX(2px);
 }
 
-.footer-contact-items {
+.footer-hours-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 8px;
   font-size: 0.8125rem;
+  color: #94A3B8;
 }
 
-.footer-contact-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
+.footer-hours-list strong {
   color: #CBD5E1;
 }
 
-.footer-contact-row svg {
-  color: #0C99E9;
-  margin-top: 3px;
-  flex-shrink: 0;
-}
-
-.contact-highlight {
-  color: #FFFFFF;
-  font-weight: 700;
-  text-decoration: none;
-  font-size: 0.9375rem;
-  transition: color 0.2s;
-}
-
-.contact-highlight:hover {
-  color: #0C99E9;
-}
-
-.contact-sub {
-  display: block;
+.footer-rmvt-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
   font-size: 0.6875rem;
   color: #94A3B8;
-  margin-top: 1px;
 }
 
-.contact-address {
-  display: block;
-  color: #CBD5E1;
-  line-height: 1.4;
-}
-
-.contact-map-link {
-  display: inline-block;
-  font-size: 0.6875rem;
-  color: #0C99E9;
-  text-decoration: none;
-  font-weight: 600;
-  margin-top: 4px;
-  transition: color 0.2s;
-}
-
-.contact-map-link:hover {
-  color: #38BDF8;
-  text-decoration: underline;
-}
-
-/* 4. Trading Hours Banner */
-.footer-hours-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 14px;
-  padding: 14px 20px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: var(--radius-md);
-  margin-top: 24px;
-  font-size: 0.75rem;
-  color: #CBD5E1;
-}
-
-.hours-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  color: #FFFFFF;
-}
-
-.hours-title svg {
+.footer-rmvt-badge svg {
   color: #0C99E9;
 }
 
-.hours-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.hours-pill {
-  background: rgba(255, 255, 255, 0.04);
-  padding: 4px 10px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.hours-pill strong {
-  color: #0C99E9;
-}
-
-/* 5. Legal Bar with Back to Top */
-.footer-legal-bar {
+.footer-simple-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 16px;
-  padding-block: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: clamp(20px, 3vw, 28px);
   font-size: 0.75rem;
-  color: #94A3B8;
-}
-
-.footer-legal-left {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.footer-legal-tag {
   color: #64748B;
-  font-size: 0.6875rem;
 }
 
-.footer-back-to-top {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(12, 153, 233, 0.3);
-  color: #FFFFFF;
+.footer-copy-text {
+  margin: 0;
+  max-width: 70ch;
+  line-height: 1.5;
+}
+
+.footer-simple-top-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #CBD5E1;
   font-size: 0.75rem;
-  font-weight: 600;
-  padding: 8px 16px;
+  font-weight: 500;
+  padding: 6px 14px;
   border-radius: 9999px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.footer-back-to-top:hover {
+.footer-simple-top-btn:hover {
   background: #0C99E9;
   border-color: #0C99E9;
   color: #0B0454;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(12, 153, 233, 0.35);
 }
 
-/* 6. Statutory Footnotes Block */
-.footer-footnotes-block {
-  padding-top: 20px;
-  padding-bottom: 48px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  font-size: 0.6875rem;
-  line-height: 1.6;
-  color: #64748B;
-}
-
-.footer-footnotes-block strong {
-  color: #94A3B8;
-}
-
-/* ==========================================================================
-   RESPONSIVE FOOTER STYLES
-   ========================================================================== */
-@media (max-width: 1200px) {
-  .footer-trust-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .footer-grid-5col {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-  .footer-col-contact {
-    grid-column: span 2;
-  }
-}
-
-@media (max-width: 900px) {
-  .footer-trust-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .footer-alert-content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .footer-alert-right {
-    width: 100%;
-  }
-  .footer-grid-5col {
+@media (max-width: 992px) {
+  .footer-simple-grid {
     grid-template-columns: 1fr 1fr;
-  }
-  .footer-col-contact {
-    grid-column: auto;
+    gap: 32px;
   }
 }
 
-@media (max-width: 600px) {
-  .footer-trust-grid {
+@media (max-width: 540px) {
+  .footer-simple-grid {
     grid-template-columns: 1fr;
+    gap: 28px;
   }
-  .footer-grid-5col {
-    grid-template-columns: 1fr;
-  }
-  .footer-input-wrap {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .footer-email-input {
-    min-width: 0;
-    width: 100%;
-  }
-  .footer-subscribe-btn {
-    width: 100%;
-    justify-content: center;
-  }
-  .footer-hours-bar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  .footer-legal-bar {
+  .footer-simple-bottom {
     flex-direction: column;
     align-items: flex-start;
   }
 }
+
