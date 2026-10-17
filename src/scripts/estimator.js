@@ -11,6 +11,7 @@ export const INDICATIVE_ANNUAL_INTEREST_RATE = 0.0895; // 8.95% p.a.
 
 export function initEstimator() {
   const amountSlider = document.getElementById('slider-amount');
+  const amountInput = document.getElementById('input-amount');
   const termSlider = document.getElementById('slider-term');
   const depositSlider = document.getElementById('slider-deposit');
 
@@ -67,7 +68,6 @@ export function initEstimator() {
     const rateSelect = document.getElementById('slider-rate');
     const annualRate = rateSelect ? parseFloat(rateSelect.value) : INDICATIVE_ANNUAL_INTEREST_RATE;
 
-    const amountInput = document.getElementById('input-amount');
     const amount = parseInt(amountSlider.value, 10);
     const term = parseInt(termSlider.value, 10);
     
@@ -212,7 +212,6 @@ export function initEstimator() {
     rateSelect.addEventListener('change', recalculate);
   }
 
-  const amountInput = document.getElementById('input-amount');
   if (amountInput) {
     amountInput.addEventListener('input', () => {
       const val = parseInt(amountInput.value, 10);

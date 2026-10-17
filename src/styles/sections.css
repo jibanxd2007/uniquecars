@@ -269,20 +269,20 @@
    Right: Asymmetric Bleed Car Image + Floating Estimator Card
    -------------------------------------------------------------------------- */
 .hero-section {
-  padding-top: clamp(24px, 3.5vw, 48px);
-  padding-bottom: clamp(60px, 8vw, 110px);
+  padding-top: clamp(36px, 4.5vw, 64px);
+  padding-bottom: clamp(60px, 8vw, 100px);
   position: relative;
-  overflow: hidden;
   background-color: var(--color-background);
 }
 
 .hero-grid {
   display: grid;
-  grid-template-columns: 1fr 1.25fr;
-  column-gap: var(--space-8);
+  grid-template-columns: 1.15fr 1fr;
+  column-gap: clamp(36px, 5vw, 64px);
   align-items: center;
   position: relative;
   z-index: 2;
+  margin-bottom: clamp(48px, 6vw, 72px);
 }
 
 .hero-left {
@@ -293,7 +293,7 @@
 .hero-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-6);
+  gap: var(--space-4);
   margin-top: var(--space-6);
   flex-wrap: wrap;
 }
@@ -303,25 +303,30 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  min-height: 580px;
 }
 
-/* Offset Surface Block behind image */
-.hero-surface-backdrop {
-  display: none;
+/* Floating Repayment Estimator Card */
+.hero-estimator-wrap {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 440px;
 }
 
-/* Car Photography with panoramic view and subtle left blend */
+/* Panoramic Cinematic Showroom Showcase Banner */
+.hero-showcase-row {
+  width: 100%;
+  position: relative;
+}
+
 .hero-image-wrap {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: calc(100% + var(--gutter-desktop) * 1.5);
-  height: 100%;
+  position: relative;
+  width: 100%;
+  height: clamp(320px, 38vw, 460px);
   border-radius: 24px;
   overflow: hidden;
-  z-index: 1;
-  box-shadow: 0 20px 45px -12px rgba(11, 15, 42, 0.16);
+  box-shadow: 0 20px 45px -12px rgba(11, 15, 42, 0.12);
+  border: 1px solid var(--color-line);
 }
 
 .hero-image-wrap::before {
@@ -329,10 +334,10 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to right,
-    rgba(11, 15, 42, 0.18) 0%,
-    rgba(11, 15, 42, 0.04) 35%,
-    rgba(11, 15, 42, 0.22) 100%
+    to bottom,
+    rgba(11, 15, 42, 0.05) 0%,
+    rgba(11, 15, 42, 0) 50%,
+    rgba(11, 15, 42, 0.4) 100%
   );
   z-index: 2;
   pointer-events: none;
@@ -343,58 +348,66 @@
   height: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  object-position: 32% 85%;
+  object-position: center 65%;
   display: block;
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
-/* Floating Repayment Estimator Card */
-.hero-estimator-wrap {
-  position: relative;
-  z-index: 5;
-  width: 400px;
-  margin-left: auto;
-  margin-right: -16px;
+.hero-image-wrap:hover .hero-car-img {
+  transform: scale(1.02);
 }
 
-@media (max-width: 1280px) {
-  .hero-estimator-wrap {
-    width: 370px;
-    margin-right: 0;
-  }
+.hero-image-badge {
+  position: absolute;
+  bottom: 24px;
+  left: 28px;
+  z-index: 3;
+  background: rgba(11, 15, 42, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 9999px;
+  padding: 8px 20px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.status-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+  display: inline-block;
+  flex-shrink: 0;
 }
 
 @media (max-width: 1024px) {
   .hero-grid {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-  }
-  .hero-left,
-  .hero-right {
-    width: 100%;
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    margin-bottom: var(--space-8);
   }
   .hero-right {
-    min-height: auto;
-    flex-direction: column;
-  }
-  .hero-image-wrap {
-    position: relative;
-    right: auto;
-    width: 100%;
-    height: 360px;
-    border-radius: 16px;
-  }
-  .hero-image-wrap::before {
-    display: none;
-  }
-  .hero-car-img {
-    object-position: center;
+    justify-content: stretch;
   }
   .hero-estimator-wrap {
-    position: static;
-    width: 100%;
-    margin-left: 0;
-    margin-top: var(--space-6);
+    max-width: 100%;
+  }
+  .hero-image-wrap {
+    height: 280px;
+    border-radius: 18px;
+  }
+  .hero-image-badge {
+    bottom: 16px;
+    left: 16px;
+    font-size: 0.75rem;
+    padding: 6px 14px;
   }
 }
 

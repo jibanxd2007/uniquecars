@@ -15,6 +15,7 @@ async function runVerification() {
   });
 
   const page = await browser.newPage();
+  page.on('pageerror', err => console.error('PAGE ERROR:', err.message));
   
   // 1. Load page
   console.log('Navigating to http://localhost:5173/ ...');

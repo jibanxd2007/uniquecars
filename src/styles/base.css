@@ -97,14 +97,12 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--color-primary);
 }
 
-/* Modern Gradient Headline Accent (Replaces dated serif italic) */
+/* Modern High-Impact Color Accent (Refined, Confident Electric Blue) */
 .serif-accent, .text-gradient-accent {
   font-family: inherit;
   font-style: normal;
   font-weight: 800;
-  background: linear-gradient(135deg, #0284C7 0%, #2563EB 55%, #1D4ED8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #0284C7;
   display: inline;
   vertical-align: baseline;
   letter-spacing: -0.02em;
