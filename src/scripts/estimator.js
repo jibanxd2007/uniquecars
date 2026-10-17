@@ -161,42 +161,6 @@ export function initEstimator() {
     });
   });
 
-  // Bind Japanese Vehicle Category buttons
-  document.querySelectorAll('.category-action-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const targetAmount = parseInt(btn.dataset.categoryAmount, 10);
-      const make = btn.dataset.categoryMake;
-      const model = btn.dataset.categoryModel;
-      if (!isNaN(targetAmount) && amountSlider) {
-        amountSlider.value = targetAmount;
-        if (amountInput) amountInput.value = targetAmount;
-        recalculate();
-
-        // Also prefill form fields for vehicle step
-        const formPrice = document.getElementById('field-price');
-        if (formPrice) formPrice.value = targetAmount;
-        if (make) {
-          const formMake = document.getElementById('field-make');
-          if (formMake) {
-            formMake.value = make;
-            formMake.dispatchEvent(new Event('change', { bubbles: true }));
-          }
-        }
-        if (model) {
-          setTimeout(() => {
-            const formModel = document.getElementById('field-model');
-            if (formModel) formModel.value = model;
-          }, 50);
-        }
-
-        // Smooth scroll up to calculator to see estimate
-        const heroSection = document.getElementById('hero');
-        if (heroSection) {
-          heroSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
-    });
-  });
 
   // Bind input listeners
   [amountSlider, termSlider, depositSlider].forEach(slider => {
