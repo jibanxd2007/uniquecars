@@ -1,0 +1,119 @@
+/* ==========================================================================
+   VELOCITY FINANCE — LAYOUT SYSTEM
+   12-Column Grid · Asymmetric Flow · Showroom Precision
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter-desktop);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding-inline: var(--gutter-mobile);
+  }
+}
+
+.container-outer {
+  width: 100%;
+  max-width: var(--container-outer);
+  margin-inline: auto;
+  padding-inline: var(--gutter-desktop);
+}
+
+@media (max-width: 768px) {
+  .container-outer {
+    padding-inline: var(--gutter-mobile);
+  }
+}
+
+/* 12-Column CSS Grid */
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gutter-desktop);
+  row-gap: var(--space-8);
+}
+
+@media (max-width: 768px) {
+  .grid-12 {
+    column-gap: var(--gutter-mobile);
+    row-gap: var(--space-6);
+  }
+}
+
+/* Sections */
+.section {
+  padding-block: var(--section-py);
+  position: relative;
+}
+
+.section-surface {
+  background-color: var(--color-surface);
+}
+
+.section-navy {
+  background-color: var(--color-primary);
+  color: var(--color-text-on-navy);
+  background-image: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    color-mix(in oklab, #0B0454 90%, #0C99E9 10%),
+    var(--color-primary-900)
+  );
+}
+
+.section-navy .section-title,
+.section-navy .card-title {
+  color: #ffffff;
+}
+
+.section-navy p {
+  color: var(--color-text-on-navy-muted);
+}
+
+/* Hairlines */
+.hairline-top {
+  border-top: 1px solid var(--color-line);
+}
+
+.hairline-bottom {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.hairline-dark-top {
+  border-top: 1px solid var(--color-line-dark);
+}
+
+.hairline-dark-bottom {
+  border-bottom: 1px solid var(--color-line-dark);
+}
+
+/* Responsive Grid Column Helpers */
+.col-12 { grid-column: span 12; }
+.col-8 { grid-column: span 8; }
+.col-7 { grid-column: span 7; }
+.col-6 { grid-column: span 6; }
+.col-5 { grid-column: span 5; }
+.col-4 { grid-column: span 4; }
+.col-3 { grid-column: span 3; }
+
+@media (max-width: 1024px) {
+  .col-7,
+  .col-6,
+  .col-5 {
+    grid-column: span 12;
+  }
+  .col-4 {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 640px) {
+  .col-8,
+  .col-4,
+  .col-3 {
+    grid-column: span 12;
+  }
+}

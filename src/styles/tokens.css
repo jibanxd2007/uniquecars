@@ -1,0 +1,106 @@
+/* ==========================================================================
+   VELOCITY FINANCE — DESIGN TOKENS
+   "Showroom precision" — Automotive Fintech Editorial System
+   ========================================================================== */
+
+:root {
+  /* ------------------------------------------------------------------------
+     1. Brand & Core Palette (Luxury Automotive Editorial System)
+     ------------------------------------------------------------------------ */
+  --color-primary:    #0B0F2A; /* Deep Navy — brand authority, luxury automotive, headings, primary buttons */
+  --color-primary-dark: #070A1E;
+  --color-accent:     #0284C7; /* Electric/Cobalt Blue — pills, CTAs, indicators */
+  --color-accent-hover: #0369A1;
+  --color-headline-accent: #1D4ED8; /* Vibrant Royal/Cobalt Blue for the italic second lines */
+  --color-background: #FFFFFF; /* Page background */
+  --color-surface:    #F8FAFC; /* Soft slate/ice white */
+  --color-surface-card: #FFFFFF;
+  --color-text:       #1E293B; /* Slate charcoal body copy */
+  --color-social:     #425EAC; /* Facebook icon */
+
+  /* ------------------------------------------------------------------------
+     2. Derived Palette
+     ------------------------------------------------------------------------ */
+  --color-primary-900: #060918;
+  --color-primary-08:  rgba(11, 15, 42, 0.05);
+  --color-line:        #E2E8F0; /* Hairlines, borders */
+  --color-line-dark:   rgba(255, 255, 255, 0.15);
+  --color-text-muted:  #64748B; /* Secondary text, hints */
+  --color-accent-ink:  #0369A1; /* High-contrast text on white */
+
+  /* Error state */
+  --color-error:       #DC2626;
+  --color-error-bg:    #FEF2F2;
+
+  /* Text on dark navy backgrounds */
+  --color-text-on-navy:       #FFFFFF;
+  --color-text-on-navy-muted: #94A3B8;
+  --color-text-on-navy-faint: #64748B;
+
+  /* ------------------------------------------------------------------------
+     3. Fluid Typography Tokens
+     Display & Headings: "Playfair Display" editorial serif
+     Text/UI: "Inter" / "Schibsted Grotesk"
+     Accent: "Playfair Display" italic
+     ------------------------------------------------------------------------ */
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-body:    "Inter", "Schibsted Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif:   "Playfair Display", Georgia, serif;
+
+  /* Scale */
+  --fs-display: clamp(2.75rem, 1.8rem + 4vw, 4.75rem);
+  --fs-h2:      clamp(2rem, 1.4rem + 2.5vw, 3.25rem);
+  --fs-h3:      clamp(1.25rem, 1.1rem + .4vw, 1.5rem);
+  --fs-lead:    clamp(1rem, 0.95rem + .3vw, 1.1875rem);
+  --fs-body:    1rem;
+  --fs-small:   0.875rem;
+  --fs-eyebrow: 0.75rem;
+  --fs-figure:  clamp(2.25rem, 1.6rem + 2.5vw, 3.5rem);
+
+  /* Measures */
+  --measure-body: 62ch;
+  --measure-lead: 48ch;
+
+  /* ------------------------------------------------------------------------
+     4. Layout & Spacing (4px base)
+     ------------------------------------------------------------------------ */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-16:  64px;
+  --space-20:  80px;
+  --space-24:  96px;
+  --space-32:  128px;
+
+  --section-py: clamp(80px, 10vw, 160px);
+  --container-max: 1280px;
+  --container-outer: 1440px;
+  --gutter-desktop: 24px;
+  --gutter-mobile: 16px;
+
+  /* ------------------------------------------------------------------------
+     5. Radii & Elevation
+     Elevation comes from 1px hairlines and surface shifts.
+     Only ONE allowed shadow token for floating elements.
+     ------------------------------------------------------------------------ */
+  --radius-sm: 6px;   /* Inputs, buttons, segmented pills */
+  --radius-lg: 14px;  /* Large media, panels, hero cards */
+  --radius-pill: 9999px; /* Status chips only */
+
+  /* The single allowed floating shadow token */
+  --shadow-float: 0 1px 2px rgb(11 4 84 / .06), 0 12px 32px -12px rgb(11 4 84 / .18);
+
+  /* ------------------------------------------------------------------------
+     6. Motion (180ms - 320ms, cubic-bezier(.2,.7,.2,1) — nothing bounces)
+     ------------------------------------------------------------------------ */
+  --ease-precision: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --duration-fast:   180ms;
+  --duration-base:   250ms;
+  --duration-smooth: 320ms;
+}
