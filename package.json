@@ -8,8 +8,10 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "devDependencies": {
-    "puppeteer-core": "^25.14.0",
+  "dependencies": {
     "vite": "^6.2.0"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^25.14.0"
   }
 }
