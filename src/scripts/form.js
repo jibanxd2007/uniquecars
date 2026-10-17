@@ -1,18 +1,18 @@
 /* ==========================================================================
-   VELOCITY FINANCE — MULTI-STEP ENQUIRY FORM
-   3-Step State · Validation · Dynamic Vehicle Models · Accessibility · Success
+   UNIQUE CARS (NZ) LTD — MULTI-STEP FINANCE APPLICATION FORM
+   3-Step State · 3-Field DOB UX · Validation · Dynamic Vehicle Models · Success State
    ========================================================================== */
 
 const VEHICLE_MODELS = {
-  Subaru: ['Exiga', 'Outback', 'Forester', 'Legacy', 'Impreza', 'XV', 'Levorg'],
   Toyota: ['Aqua Hybrid', 'Corolla', 'Prius', 'RAV4', 'Hilux', 'Vitz', 'Estima / Alphard', 'Land Cruiser Prado'],
+  Subaru: ['Forester', 'Outback', 'Legacy', 'Impreza', 'XV', 'Levorg', 'Exiga'],
   Nissan: ['Leaf EV', 'Note e-Power', 'X-Trail', 'Serena', 'Tiida', 'Qashqai / Dualis', 'Navara'],
-  Mazda: ['Axela (Mazda3)', 'Demio (Mazda2)', 'CX-5', 'Atenza (Mazda6)', 'CX-3', 'Biante'],
+  Mazda: ['CX-5', 'Axela (Mazda3)', 'Demio (Mazda2)', 'Atenza (Mazda6)', 'CX-3', 'Biante'],
   Honda: ['Fit / Jazz', 'Vezel Hybrid', 'CR-V', 'Civic', 'Odyssey', 'Shuttle'],
-  Mitsubishi: ['Outlander PHEV', 'ASX', 'Eclipse Cross', 'Triton', 'Delica D:5'],
+  Mitsubishi: ['Outlander PHEV', 'Triton', 'ASX', 'Eclipse Cross', 'Delica D:5'],
   Suzuki: ['Swift', 'Jimny', 'Vitara', 'SX4 S-Cross'],
   Ford: ['Ranger', 'Everest', 'Focus', 'Transit'],
-  European: ['Audi Q5 / A4', 'BMW 3-Series / X3', 'Mercedes-Benz C-Class / GLC', 'Volkswagen Golf / Tiguan'],
+  European: ['BMW 3-Series / 5-Series / X3', 'Audi Q5 / A4', 'Mercedes-Benz C-Class / GLC', 'Volkswagen Golf / Tiguan'],
   Other: ['Sedan', 'Hatchback', 'SUV / 4X4', 'Station Wagon', 'Van / People Mover']
 };
 
@@ -53,16 +53,64 @@ export function initApplyForm() {
     });
   }
 
+  // DOB 3-Field UX Sync with hidden/synced #field-dob
+  const dobDay = document.getElementById('dob-day');
+  const dobMonth = document.getElementById('dob-month');
+  const dobYear = document.getElementById('dob-year');
+  const fieldDob = document.getElementById('field-dob');
+
+  function syncDobToHidden() {
+    if (!fieldDob) return;
+    const d = dobDay ? dobDay.value.trim().padStart(2, '0') : '';
+    const m = dobMonth ? dobMonth.value.trim().padStart(2, '0') : '';
+    const y = dobYear ? dobYear.value.trim() : '';
+
+    if (d && m && y && y.length === 4) {
+      fieldDob.value = `${y}-${m}-${d}`;
+    }
+  }
+
+  function syncHiddenToDobParts() {
+    if (!fieldDob || !fieldDob.value) return;
+    const parts = fieldDob.value.split('-');
+    if (parts.length === 3) {
+      if (dobYear) dobYear.value = parts[0];
+      if (dobMonth) dobMonth.value = parts[1];
+      if (dobDay) dobDay.value = parts[2];
+    }
+  }
+
+  if (dobDay && dobMonth && dobYear) {
+    [dobDay, dobMonth, dobYear].forEach(inp => {
+      inp.addEventListener('input', () => {
+        syncDobToHidden();
+        if (fieldDob && fieldDob.value) {
+          clearFieldError('field-dob');
+        }
+      });
+      // Auto-advance cursor for frictionless date entry
+      inp.addEventListener('keyup', (e) => {
+        if (inp.id === 'dob-day' && inp.value.length === 2 && e.key >= '0' && e.key <= '9') {
+          dobMonth.focus();
+        } else if (inp.id === 'dob-month' && inp.value.length === 2 && e.key >= '0' && e.key <= '9') {
+          dobYear.focus();
+        }
+      });
+    });
+
+    if (fieldDob && fieldDob.value) {
+      syncHiddenToDobParts();
+    }
+  }
+
   // Populate dynamic review summary on Step 3
   function updateReviewSummary() {
     const firstName = document.getElementById('field-firstname')?.value.trim() || '';
     const lastName = document.getElementById('field-lastname')?.value.trim() || '';
-    const email = document.getElementById('field-email')?.value.trim() || '';
-    const phone = document.getElementById('field-phone')?.value.trim() || '';
     const make = document.getElementById('field-make')?.value || 'Not specified';
     const model = document.getElementById('field-model')?.value || '';
-    const price = document.getElementById('field-price')?.value || '0';
-    const term = document.getElementById('field-term')?.value || '5';
+    const price = document.getElementById('field-price')?.value || '45000';
+    const term = document.getElementById('field-term')?.value || '3';
     const income = document.getElementById('field-income')?.value || '0';
 
     const reviewName = document.getElementById('review-name');
@@ -73,7 +121,9 @@ export function initApplyForm() {
     if (reviewName) reviewName.textContent = `${firstName} ${lastName}`.trim() || '—';
     if (reviewVehicle) reviewVehicle.textContent = `${make} ${model}`.trim() || '—';
     if (reviewFinance) {
-      reviewFinance.textContent = `NZ$ ${parseInt(price, 10).toLocaleString('en-NZ')} over ${term} ${parseInt(term, 10) === 1 ? 'Year' : 'Years'}`;
+      const termNum = parseInt(term, 10);
+      const termDisplay = termNum > 10 ? `${termNum} months` : `${termNum} ${termNum === 1 ? 'Year' : 'Years'}`;
+      reviewFinance.textContent = `NZ$ ${parseInt(price, 10).toLocaleString('en-NZ')} over ${termDisplay}`;
     }
     if (reviewIncome) {
       reviewIncome.textContent = `NZ$ ${parseInt(income, 10).toLocaleString('en-NZ')} / month`;
@@ -85,7 +135,6 @@ export function initApplyForm() {
   }
 
   function validateNZPhone(phone) {
-    // NZ numbers: mobile (02x), landline (03, 04, 06, 07, 09), or 0800
     const cleaned = phone.replace(/[\s\-\(\)]/g, '');
     return /^(02\d{7,9}|0[34679]\d{7}|0800\d{6,7}|\+64\d{8,10})$/.test(cleaned);
   }
@@ -136,8 +185,8 @@ export function initApplyForm() {
     { id: 'field-firstname', msg: 'Please enter your first name' },
     { id: 'field-lastname', msg: 'Please enter your last name' },
     { id: 'field-email', validate: validateEmail, msg: 'Please enter a valid email address' },
-    { id: 'field-phone', validate: validateNZPhone, msg: 'Please enter a valid NZ phone number' },
-    { id: 'field-dob', validate: validateAge18, msg: 'You must be at least 18 years old to apply' },
+    { id: 'field-phone', validate: validateNZPhone, msg: 'Please enter a valid NZ mobile or phone number' },
+    { id: 'field-dob', validate: validateAge18, msg: 'Applicants must be at least 18 years old' },
     { id: 'field-residence', msg: 'Please select your residential status' },
     { id: 'field-make', msg: 'Please select a vehicle make' },
     { id: 'field-model', msg: 'Please select a vehicle model' },
@@ -176,6 +225,7 @@ export function initApplyForm() {
   function validateStep(step) {
     let isValid = true;
     if (step === 1) {
+      syncDobToHidden();
       const fields = ['field-firstname', 'field-lastname', 'field-email', 'field-phone', 'field-dob', 'field-residence'];
       fields.forEach(fid => {
         const config = inputsToValidate.find(c => c.id === fid);
@@ -226,7 +276,7 @@ export function initApplyForm() {
 
       const consentCheck = document.getElementById('field-consent');
       if (consentCheck && !consentCheck.checked) {
-        setFieldError('field-consent', 'You must agree to the Terms, Privacy Policy and credit consent');
+        setFieldError('field-consent', 'Please agree to credit check consent and CCCFA disclosure terms');
         isValid = false;
       } else {
         clearFieldError('field-consent');
@@ -238,9 +288,8 @@ export function initApplyForm() {
   function goToStep(step) {
     currentStep = step;
 
-    // Update left sticky eyebrow
     if (stepEyebrow) {
-      stepEyebrow.textContent = `Step ${currentStep} of ${totalSteps}`;
+      stepEyebrow.textContent = `STEP ${currentStep} OF ${totalSteps} • ABOUT 3 MINUTES`;
     }
 
     // Update stepper pills
@@ -266,7 +315,7 @@ export function initApplyForm() {
       }
     });
 
-    // Update animated stepper progress bar
+    // Update progress bar
     const progressFill = document.getElementById('stepper-progress-fill');
     if (progressFill) {
       const pct = (currentStep / totalSteps) * 100;
@@ -298,7 +347,7 @@ export function initApplyForm() {
       if (btnSubmit) btnSubmit.style.display = 'none';
     }
 
-    // Scroll to top of form smoothly if on mobile
+    // Scroll smoothly to top of form on mobile
     if (window.innerWidth <= 1024) {
       const formTop = form.getBoundingClientRect().top + window.scrollY - 80;
       window.scrollTo({ top: formTop, behavior: 'smooth' });
