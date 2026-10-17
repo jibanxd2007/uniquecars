@@ -266,6 +266,13 @@ export function initApplyForm() {
       }
     });
 
+    // Update animated stepper progress bar
+    const progressFill = document.getElementById('stepper-progress-fill');
+    if (progressFill) {
+      const pct = (currentStep / totalSteps) * 100;
+      progressFill.style.width = `${pct}%`;
+    }
+
     // Toggle step panes
     stepContents.forEach(pane => {
       const paneStep = parseInt(pane.getAttribute('data-step'), 10);

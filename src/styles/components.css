@@ -2127,3 +2127,180 @@
   }
 }
 
+/* ==========================================================================
+   VISUAL & INTERACTIVE ELEVATIONS
+   Hero Pill · Stepper Progress · Japanese Vehicle Categories
+   ========================================================================== */
+
+/* Hero Status Pill */
+.hero-eyebrow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(12, 153, 233, 0.08);
+  border: 1px solid rgba(12, 153, 233, 0.25);
+  color: var(--color-accent-ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-4);
+}
+
+.hero-secondary-btn {
+  background: #ffffff;
+  border: 1.5px solid var(--color-line);
+  color: var(--color-primary);
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: all var(--duration-fast) var(--ease-precision);
+}
+
+.hero-secondary-btn:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-surface);
+  transform: translateY(-2px);
+}
+
+/* Stepper Animated Progress Bar */
+.stepper-progress-container {
+  width: 100%;
+  height: 4px;
+  background-color: var(--color-line);
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-5);
+  overflow: hidden;
+}
+
+.stepper-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-accent) 0%, #38BDF8 100%);
+  border-radius: var(--radius-pill);
+  transition: width 0.35s var(--ease-precision);
+}
+
+/* Direct Japanese Imports Showcase */
+.vehicle-categories-wrap {
+  margin-top: clamp(48px, 6vw, 64px);
+  padding-top: clamp(36px, 5vw, 56px);
+  border-top: 1px solid var(--color-line);
+}
+
+.categories-header-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: var(--space-6);
+}
+
+.categories-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.625rem);
+  font-variation-settings: "wdth" 115, "wght" 700;
+  color: var(--color-primary);
+}
+
+.categories-grid-4col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+.category-card {
+  background: #ffffff;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.25s var(--ease-precision);
+  box-shadow: 0 2px 8px rgba(11, 4, 84, 0.04);
+}
+
+.category-card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px rgba(12, 153, 233, 0.2);
+}
+
+.category-badge {
+  align-self: flex-start;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--color-accent-ink);
+  background: rgba(12, 153, 233, 0.1);
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  margin-bottom: var(--space-3);
+}
+
+.category-icon-box {
+  font-size: 1.75rem;
+  margin-bottom: var(--space-2);
+}
+
+.category-name {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-variation-settings: "wdth" 115, "wght" 700;
+  color: var(--color-primary);
+  margin-bottom: 4px;
+}
+
+.category-models {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.category-spec {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #059669;
+  margin-bottom: var(--space-4);
+}
+
+.category-action-btn {
+  margin-top: auto;
+  background: transparent;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-pill);
+  padding: 8px 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.category-card:hover .category-action-btn {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #ffffff;
+}
+
+@media (max-width: 1024px) {
+  .categories-grid-4col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .categories-grid-4col {
+    grid-template-columns: 1fr;
+  }
+}
+

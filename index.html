@@ -112,11 +112,11 @@
 
       <!-- Header Actions: Phone + Apply Now Button -->
       <div class="header-actions">
-        <a href="tel:+6498881234" class="header-phone" aria-label="Call Unique Cars on +64 9 888 1234">
+        <a href="tel:0800030150" class="header-phone" aria-label="Call Unique Cars toll-free on 0800 030 150">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
           </svg>
-          <span class="phone-link">+64 9 888 1234</span>
+          <span class="phone-link">0800 030 150</span>
         </a>
         <a href="#apply" class="btn btn-primary btn-pill">
           Apply Now
@@ -163,9 +163,12 @@
     <section id="hero" class="hero-section" aria-labelledby="hero-title">
       <div class="container">
         <div class="hero-grid">
-          <!-- Left Column: Eyebrow, H1, Lead, CTA, 3 Trust Badges -->
+          <!-- Left Column: Eyebrow Pill, H1, Lead, Dual CTA, 3 Trust Badges -->
           <div class="hero-left">
-            <div class="hero-eyebrow-text">PREMIUM CAR FINANCE &bull; NEW ZEALAND</div>
+            <div class="hero-eyebrow-pill">
+              <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#10B981;"></span>
+              Same-Day Online Approvals &bull; Direct Japanese Importer
+            </div>
             <h1 id="hero-title" class="display-title">
               <span class="h1-line-wrap"><span class="h1-line">Your next car</span></span>
               <span class="h1-line-wrap"><span class="h1-line"><em class="serif-accent">starts here.</em></span></span>
@@ -177,8 +180,14 @@
 
             <div class="hero-actions">
               <a href="#apply" class="btn btn-hero-cta" id="hero-btn-apply">
-                Apply Now
+                Apply for Finance
                 <span class="btn-arrow" aria-hidden="true">&rarr;</span>
+              </a>
+              <a href="#vehicle-categories" class="hero-secondary-btn">
+                <span>Explore Vehicles</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+                </svg>
               </a>
             </div>
 
@@ -249,7 +258,7 @@
                   </div>
                   <!-- Preserved hidden inputs and preset chips for test suite compatibility -->
                   <input type="number" id="input-amount" value="45000" min="5000" max="150000" step="1000" style="display: none;" aria-label="Vehicle Price number input">
-                  <div class="calc-presets-row" style="display: none;" role="group" aria-label="Quick price presets">
+                  <div class="calc-presets-row" role="group" aria-label="Quick price presets">
                     <button type="button" class="preset-chip" data-amount="15000">$15k</button>
                     <button type="button" class="preset-chip" data-amount="20000">$20k</button>
                     <button type="button" class="preset-chip" data-amount="35000">$35k</button>
@@ -391,6 +400,11 @@
                   <span class="stepper-title">Review &amp; Submit</span>
                 </div>
               </nav>
+
+              <!-- Progress Bar -->
+              <div class="stepper-progress-container" aria-hidden="true">
+                <div id="stepper-progress-fill" class="stepper-progress-fill" style="width: 33.33%;"></div>
+              </div>
 
               <form id="finance-enquiry-form" novalidate>
                 <!-- STEP 1: Personal Details -->
@@ -712,6 +726,67 @@
             <p class="feature-desc">Our team is here before, during and after your loan.</p>
           </div>
         </div>
+
+        <!-- Direct Japanese Imports Showcase Grid -->
+        <div id="vehicle-categories" class="vehicle-categories-wrap scroll-reveal">
+          <div class="categories-header-row">
+            <span class="eyebrow" style="color: var(--color-accent-ink); font-weight: 700; letter-spacing: 0.12em;">DIRECT JAPANESE IMPORTS</span>
+            <h3 class="categories-title">Popular Import Categories &bull; Calculated in 1-Click</h3>
+            <p class="text-muted" style="font-size: 0.9375rem;">
+              Hand-selected from top Japanese auctions, fully complied and VTNZ inspected. Pick a category to prefill your finance quote.
+            </p>
+          </div>
+
+          <div class="categories-grid-4col">
+            <!-- Category 1: Hybrid Hatchbacks -->
+            <div class="category-card">
+              <span class="category-badge">Eco &bull; High Demand</span>
+              <div class="category-icon-box">⚡</div>
+              <h4 class="category-name">Hybrid Hatchbacks</h4>
+              <p class="category-models">Toyota Aqua, Prius, Honda Fit Hybrid, Nissan Note e-Power</p>
+              <div class="category-spec">Avg. $15,000 &bull; from ~$55/wk</div>
+              <button type="button" class="category-action-btn" data-category-amount="15000" data-category-make="Toyota" data-category-model="Aqua Hybrid">
+                Calculate $15k Finance &rarr;
+              </button>
+            </div>
+
+            <!-- Category 2: Family SUVs -->
+            <div class="category-card">
+              <span class="category-badge">Family &bull; Top Safety</span>
+              <div class="category-icon-box">🚙</div>
+              <h4 class="category-name">Compact &amp; Mid SUVs</h4>
+              <p class="category-models">Mazda CX-5, Toyota RAV4, Subaru Forester, Nissan X-Trail</p>
+              <div class="category-spec">Avg. $22,000 &bull; from ~$79/wk</div>
+              <button type="button" class="category-action-btn" data-category-amount="22000" data-category-make="Mazda" data-category-model="CX-5">
+                Calculate $22k Finance &rarr;
+              </button>
+            </div>
+
+            <!-- Category 3: Work Utes & 4WD -->
+            <div class="category-card">
+              <span class="category-badge">Commercial &bull; Heavy Duty</span>
+              <div class="category-icon-box">🛻</div>
+              <h4 class="category-name">Work Utes &amp; 4WD</h4>
+              <p class="category-models">Toyota Hilux, Ford Ranger, Isuzu D-Max, Mitsubishi Triton</p>
+              <div class="category-spec">Avg. $38,000 &bull; from ~$135/wk</div>
+              <button type="button" class="category-action-btn" data-category-amount="38000" data-category-make="Toyota" data-category-model="Hilux">
+                Calculate $38k Finance &rarr;
+              </button>
+            </div>
+
+            <!-- Category 4: EVs & People Movers -->
+            <div class="category-card">
+              <span class="category-badge">7-8 Seater / Clean Energy</span>
+              <div class="category-icon-box">🚐</div>
+              <h4 class="category-name">People Movers &amp; EVs</h4>
+              <p class="category-models">Nissan Serena, Toyota Alphard, Nissan Leaf EV, Tesla Model 3</p>
+              <div class="category-spec">Avg. $28,000 &bull; from ~$99/wk</div>
+              <button type="button" class="category-action-btn" data-category-amount="28000" data-category-make="Nissan" data-category-model="Serena">
+                Calculate $28k Finance &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -795,11 +870,11 @@
             <p class="support-card-desc">
               Have a question or ready to apply? Our team is here to help you get on the road.
             </p>
-            <a href="tel:+6498881234" class="support-action-phone-btn" aria-label="Call Unique Cars on +64 9 888 1234">
+            <a href="tel:0800030150" class="support-action-phone-btn" aria-label="Call Unique Cars toll-free on 0800 030 150">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
               </svg>
-              +64 9 888 1234
+              0800 030 150
             </a>
             <div class="support-meta-list">
               <div class="support-meta-item">
