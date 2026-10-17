@@ -302,8 +302,8 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  min-height: 560px;
+  justify-content: flex-end;
+  min-height: 580px;
 }
 
 /* Offset Surface Block behind image */
@@ -315,20 +315,25 @@
 .hero-image-wrap {
   position: absolute;
   top: 0;
-  right: calc(var(--gutter-desktop) * -2);
-  width: calc(100% + var(--gutter-desktop) * 2 + 60px);
+  left: 0;
+  width: calc(100% + var(--gutter-desktop) * 1.5);
   height: 100%;
-  border-radius: 20px;
+  border-radius: 24px;
   overflow: hidden;
   z-index: 1;
-  box-shadow: 0 16px 40px -12px rgba(11, 15, 42, 0.12);
+  box-shadow: 0 20px 45px -12px rgba(11, 15, 42, 0.16);
 }
 
 .hero-image-wrap::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.25) 15%, rgba(255, 255, 255, 0) 35%);
+  background: linear-gradient(
+    to right,
+    rgba(11, 15, 42, 0.18) 0%,
+    rgba(11, 15, 42, 0.04) 35%,
+    rgba(11, 15, 42, 0.22) 100%
+  );
   z-index: 2;
   pointer-events: none;
 }
@@ -338,7 +343,7 @@
   height: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  object-position: 45% center;
+  object-position: 32% 85%;
   display: block;
 }
 
@@ -346,14 +351,15 @@
 .hero-estimator-wrap {
   position: relative;
   z-index: 5;
-  width: 410px;
-  margin-left: -40px;
+  width: 400px;
+  margin-left: auto;
+  margin-right: -16px;
 }
 
 @media (max-width: 1280px) {
   .hero-estimator-wrap {
-    margin-left: -20px;
-    width: 380px;
+    width: 370px;
+    margin-right: 0;
   }
 }
 

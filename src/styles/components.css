@@ -263,25 +263,24 @@
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: 0.9375rem;
-  font-weight: 400;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  transition:
-    border-color var(--duration-fast) var(--ease-precision),
-    background-color var(--duration-fast) var(--ease-precision);
+  font-weight: 500;
+  border-radius: 10px;
+  border: 1.5px solid var(--color-line);
+  transition: all var(--duration-fast) var(--ease-precision);
   -webkit-appearance: none;
   appearance: none;
 }
 
 .input-control:hover {
-  border-color: var(--color-primary);
+  border-color: #94A3B8;
+  background-color: #ffffff;
 }
 
 .input-control:focus {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-  border-color: transparent;
+  outline: none;
+  border-color: var(--color-accent);
   background-color: #ffffff;
+  box-shadow: 0 0 0 3.5px rgba(2, 132, 199, 0.15);
 }
 
 .input-control.is-invalid {
@@ -317,23 +316,25 @@
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: 0.9375rem;
-  font-weight: 400;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
+  font-weight: 500;
+  border-radius: 10px;
+  border: 1.5px solid var(--color-line);
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
-  transition: border-color var(--duration-fast) var(--ease-precision);
+  transition: all var(--duration-fast) var(--ease-precision);
 }
 
 .select-wrapper select:hover {
-  border-color: var(--color-primary);
+  border-color: #94A3B8;
+  background-color: #ffffff;
 }
 
 .select-wrapper select:focus {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
+  outline: none;
+  border-color: var(--color-accent);
   background-color: #ffffff;
+  box-shadow: 0 0 0 3.5px rgba(2, 132, 199, 0.15);
 }
 
 .select-wrapper select.is-invalid {
@@ -950,11 +951,13 @@
 
 /* 2. Floating Vehicle Finance Calculator Card (Mockup Hero) */
 .calc-card-floating {
-  background-color: #ffffff;
-  border: 1px solid var(--color-line);
-  border-radius: 20px;
-  box-shadow: 0 20px 50px -10px rgba(11, 15, 42, 0.14), 0 2px 6px rgba(11, 15, 42, 0.04);
-  padding: 28px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 22px;
+  box-shadow: 0 25px 60px -15px rgba(11, 15, 42, 0.22), 0 0 0 1px rgba(11, 15, 42, 0.05);
+  padding: 26px;
   position: relative;
   z-index: 10;
 }
@@ -1174,11 +1177,23 @@
 .calc-repayment-preview {
   display: flex;
   flex-direction: column;
-  background: #F0F7FF;
-  border: 1px solid #BAE6FD;
-  border-radius: 12px;
+  background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+  border: 1.5px solid #BAE6FD;
+  border-radius: 14px;
   padding: 16px 20px;
   margin-block: var(--space-4);
+  position: relative;
+  overflow: hidden;
+}
+
+.calc-repayment-preview::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #0284C7;
 }
 
 .calc-preview-label {
@@ -1320,33 +1335,40 @@
 .feature-box {
   background-color: #ffffff;
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg);
-  padding: var(--space-6);
+  border-radius: 18px;
+  padding: 28px 24px;
   display: flex;
   flex-direction: column;
-  transition:
-    border-color var(--duration-fast) var(--ease-precision),
-    transform var(--duration-fast) var(--ease-precision),
-    box-shadow var(--duration-fast) var(--ease-precision);
+  position: relative;
+  transition: all 0.25s var(--ease-precision);
+  box-shadow: 0 4px 14px rgba(11, 15, 42, 0.03);
 }
 
 .feature-box:hover {
-  border-color: var(--color-accent);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px -6px rgba(11, 4, 84, 0.08);
+  border-color: rgba(2, 132, 199, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px -8px rgba(11, 15, 42, 0.1);
 }
 
 .feature-icon-circle {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background-color: #F0F9FF;
-  border: 1px solid #E0F2FE;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+  border: 1px solid #BAE6FD;
   color: #0284C7;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: var(--space-4);
+  transition: all 0.25s ease;
+}
+
+.feature-box:hover .feature-icon-circle {
+  transform: scale(1.08);
+  box-shadow: 0 6px 16px rgba(2, 132, 199, 0.25);
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+  color: #FFFFFF;
 }
 
 .feature-title {
@@ -2216,19 +2238,36 @@
 .category-card {
   background: #ffffff;
   border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
+  border-radius: 18px;
+  padding: 22px;
   display: flex;
   flex-direction: column;
   position: relative;
   transition: all 0.25s var(--ease-precision);
-  box-shadow: 0 2px 8px rgba(11, 4, 84, 0.04);
+  box-shadow: 0 4px 14px rgba(11, 15, 42, 0.04);
+  overflow: hidden;
+}
+
+.category-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-accent) 0%, #38BDF8 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.category-card:hover::before {
+  opacity: 1;
 }
 
 .category-card:hover {
-  border-color: var(--color-accent);
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px -8px rgba(12, 153, 233, 0.2);
+  border-color: rgba(2, 132, 199, 0.35);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 32px -8px rgba(11, 15, 42, 0.12);
 }
 
 .category-badge {
@@ -2243,8 +2282,22 @@
 }
 
 .category-icon-box {
-  font-size: 1.75rem;
-  margin-bottom: var(--space-2);
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.08), rgba(37, 99, 235, 0.04));
+  border: 1px solid rgba(2, 132, 199, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-3);
+  transition: all 0.25s ease;
+}
+
+.category-card:hover .category-icon-box {
+  background: linear-gradient(135deg, rgba(2, 132, 199, 0.18), rgba(37, 99, 235, 0.1));
+  border-color: rgba(2, 132, 199, 0.4);
+  transform: scale(1.06);
 }
 
 .category-name {

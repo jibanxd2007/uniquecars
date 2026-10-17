@@ -71,9 +71,9 @@ h1, h2, h3, h4, h5, h6 {
 .display-title {
   font-family: var(--font-display);
   font-size: var(--fs-display);
-  font-variation-settings: "wdth" 118, "wght" 720;
-  line-height: 0.94;
-  letter-spacing: -0.03em;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
   color: var(--color-primary);
 }
 
@@ -81,8 +81,8 @@ h1, h2, h3, h4, h5, h6 {
 .section-title {
   font-family: var(--font-display);
   font-size: var(--fs-h2);
-  font-variation-settings: "wdth" 112, "wght" 680;
-  line-height: 1.02;
+  font-weight: 750;
+  line-height: 1.12;
   letter-spacing: -0.025em;
   color: var(--color-primary);
 }
@@ -91,23 +91,23 @@ h1, h2, h3, h4, h5, h6 {
 .card-title {
   font-family: var(--font-display);
   font-size: var(--fs-h3);
-  font-variation-settings: "wdth" 100, "wght" 620;
-  line-height: 1.2;
-  letter-spacing: -0.01em;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
   color: var(--color-primary);
 }
 
-/* Editorial Serif Accent (Newsreader Italic — max one per headline) */
-.serif-accent {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 600;
-  color: var(--color-headline-accent, #1D4ED8);
-  font-size: 1.02em;
-  line-height: inherit;
+/* Modern Gradient Headline Accent (Replaces dated serif italic) */
+.serif-accent, .text-gradient-accent {
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 800;
+  background: linear-gradient(135deg, #0284C7 0%, #2563EB 55%, #1D4ED8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   display: inline;
   vertical-align: baseline;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 /* Eyebrows */
