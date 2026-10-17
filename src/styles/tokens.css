@@ -9,10 +9,10 @@
      ------------------------------------------------------------------------ */
   --color-primary:        #0B1530; /* Deep Navy — headings, dark bands, brand authority */
   --color-primary-dark:   #070E20; /* Darkest Navy — footer background */
-  --color-accent:         #1479C9; /* Brand Blue — primary CTAs, focal points */
-  --color-accent-hover:   #0F65AB; /* Deeper blue for hover state */
-  --color-accent-light:   #EBF5FC; /* 10% soft blue tint for badges */
-  --color-accent-ink:     #0D61A3; /* High-contrast blue for text */
+  --color-accent:         #0C99E9; /* Live Site Brand Blue — primary CTAs, focal points */
+  --color-accent-hover:   #0A85CC; /* Deeper blue for hover state */
+  --color-accent-light:   #E6F4FD; /* Soft blue tint for badges */
+  --color-accent-ink:     #08689E; /* High-contrast blue for text on white (4.5:1+) */
   --color-success:        #16A34A; /* Emerald green for icons, badges & positive UI */
   --color-success-dark:   #15803D; /* High contrast green for legible text (4.5:1+ WCAG AA) */
   --color-success-light:  #DCFCE7;

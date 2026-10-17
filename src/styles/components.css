@@ -52,38 +52,25 @@
   border-radius: var(--radius-pill) !important;
 }
 
-/* Primary CTA Button (Single primary CTA style: Brand Blue #1479C9) */
-.btn-primary {
-  background-color: var(--color-accent);
-  color: #ffffff !important;
-  border: 1px solid var(--color-accent);
-  font-weight: 700;
-  box-shadow: 0 4px 14px rgba(20, 121, 201, 0.28);
-}
-
-.btn-primary:hover {
-  background-color: var(--color-accent-hover);
-  border-color: var(--color-accent-hover);
-  color: #ffffff !important;
-  box-shadow: 0 6px 20px rgba(20, 121, 201, 0.38);
-  transform: translateY(-1px);
-}
-
-/* Accent Button alias */
+/* Primary CTA Button (Single primary CTA style: Brand Blue #0C99E9) */
+.btn-primary,
 .btn-accent,
 .btn-cyan {
   background-color: var(--color-accent);
-  color: #ffffff;
+  color: var(--color-primary) !important;
   border: 1px solid var(--color-accent);
   font-weight: 700;
+  box-shadow: 0 4px 14px rgba(12, 153, 233, 0.28);
 }
 
+.btn-primary:hover,
 .btn-accent:hover,
 .btn-cyan:hover {
   background-color: var(--color-accent-hover);
   border-color: var(--color-accent-hover);
-  color: #ffffff;
-  box-shadow: 0 6px 20px rgba(20, 121, 201, 0.38);
+  color: var(--color-primary) !important;
+  box-shadow: 0 6px 20px rgba(12, 153, 233, 0.38);
+  transform: translateY(-1px);
 }
 
 /* Outline Button on Light */

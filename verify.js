@@ -45,7 +45,7 @@ async function runVerification() {
   }
 
   // 2. Viewport 1440
-  console.log('Testing 1440px width...');
+  console.log('Testing 1440px width (Desktop Deliverable)...');
   await page.setViewport({ width: 1440, height: 900 });
   await triggerAllReveals(page);
   await new Promise(r => setTimeout(r, 400));
@@ -92,35 +92,14 @@ async function runVerification() {
   });
   console.log('Saved screenshot-768.png');
 
-  // 5. Viewport 375 & 390 (Modern Mobile)
-  console.log('Testing 375px width (Mobile)...');
-  await page.setViewport({ width: 375, height: 812 });
-  await triggerAllReveals(page);
-  await new Promise(r => setTimeout(r, 300));
-  await page.screenshot({ path: 'screenshot-375-fold.png', fullPage: false });
-  console.log('Saved screenshot-375-fold.png (Above the fold)');
-
-  await page.evaluate(() => {
-    const h = document.querySelector('.site-header');
-    if (h) h.style.position = 'relative';
-    const s = document.getElementById('mobile-sticky-bar');
-    if (s) s.style.display = 'none';
-  });
-  await page.screenshot({ path: 'screenshot-375.png', fullPage: true });
-  await page.evaluate(() => {
-    const h = document.querySelector('.site-header');
-    if (h) h.style.position = '';
-    const s = document.getElementById('mobile-sticky-bar');
-    if (s) s.style.display = '';
-  });
-  console.log('Saved screenshot-375.png (Full page)');
-
-  // Viewport 390 (Standard modern mobile: iPhone 14/15)
-  console.log('Testing 390px width (Mobile 390)...');
+  // 5. Viewport 390 (Mobile 390 Deliverable)
+  console.log('Testing 390px width (Mobile 390 Deliverable)...');
   await page.setViewport({ width: 390, height: 844 });
   await triggerAllReveals(page);
   await new Promise(r => setTimeout(r, 300));
   await page.screenshot({ path: 'screenshot-390-fold.png', fullPage: false });
+  console.log('Saved screenshot-390-fold.png (Above the fold)');
+
   await page.evaluate(() => {
     const h = document.querySelector('.site-header');
     if (h) h.style.position = 'relative';
@@ -136,125 +115,190 @@ async function runVerification() {
   });
   console.log('Saved screenshot-390.png');
 
-  // 6. Reset to desktop for interactive testing
+  // Viewport 375 (Standard compact mobile)
+  console.log('Testing 375px width (Mobile 375)...');
+  await page.setViewport({ width: 375, height: 812 });
+  await triggerAllReveals(page);
+  await new Promise(r => setTimeout(r, 300));
+  await page.screenshot({ path: 'screenshot-375-fold.png', fullPage: false });
+
+  await page.evaluate(() => {
+    const h = document.querySelector('.site-header');
+    if (h) h.style.position = 'relative';
+    const s = document.getElementById('mobile-sticky-bar');
+    if (s) s.style.display = 'none';
+  });
+  await page.screenshot({ path: 'screenshot-375.png', fullPage: true });
+  await page.evaluate(() => {
+    const h = document.querySelector('.site-header');
+    if (h) h.style.position = '';
+    const s = document.getElementById('mobile-sticky-bar');
+    if (s) s.style.display = '';
+  });
+  console.log('Saved screenshot-375.png');
+
+  // 6. Reset to desktop 1440 for interactive 4-step testing
   await page.setViewport({ width: 1440, height: 900 });
 
-  // Test Estimator & Step 1 Form
-  console.log('\n--- Testing Estimator & Form Step 1 (Vehicle & Loan Details) ---');
-  const initialWeekly = await page.$eval('#figure-weekly', el => el.textContent.trim());
-  console.log(`Initial weekly repayment: ${initialWeekly}`);
-
-  // Adjust amount slider to $50,000
-  await page.evaluate(() => {
-    const slider = document.getElementById('slider-amount');
-    slider.value = 50000;
-    slider.dispatchEvent(new Event('input', { bubbles: true }));
-  });
-  await new Promise(r => setTimeout(r, 400));
-  const updatedWeekly = await page.$eval('#figure-weekly', el => el.textContent.trim());
-  console.log(`Updated weekly repayment (NZ$ 50,000): ${updatedWeekly}`);
-
-  // Test dynamic make/model selection on Step 1
-  await page.select('#field-make', 'Toyota');
-  await new Promise(r => setTimeout(r, 100));
-  const toyotaModels = await page.$$eval('#field-model option', opts => opts.map(o => o.value).filter(Boolean));
-  console.log(`Toyota models populated: ${toyotaModels.join(', ')}`);
-  await page.select('#field-model', 'Hilux');
-  await page.select('#field-year', '2024–2026');
-
-  // Capture Step 1 Form Card
-  const formPanel = await page.$('.form-panel');
-  if (formPanel) {
-    await formPanel.screenshot({ path: 'form-step-1.png' });
-    console.log('Saved form-step-1.png');
+  async function captureFormPanel(filename) {
+    await page.evaluate(() => {
+      const h = document.querySelector('.site-header');
+      if (h) h.style.visibility = 'hidden';
+    });
+    const formPanel = await page.$('.form-panel');
+    if (formPanel) {
+      await formPanel.screenshot({ path: filename });
+      console.log(`Saved ${filename}`);
+    }
+    await page.evaluate(() => {
+      const h = document.querySelector('.site-header');
+      if (h) h.style.visibility = '';
+    });
   }
 
-  // Submit Step 1
-  console.log('Advancing from Step 1 to Step 2 (clicking Next Step)...');
+  // --- STEP 1: Loan Details & Merged Calculator ---
+  console.log('\n--- Testing Form Step 1: Loan Details & Calculator ---');
+  const initialWeekly = await page.$eval('#figure-weekly', el => el.textContent.trim());
+  console.log(`Initial repayment: ${initialWeekly}`);
+
+  // Test $35k preset chip
+  await page.click('[data-amount="35000"]');
+  await new Promise(r => setTimeout(r, 300));
+  const weeklyAfter35k = await page.$eval('#figure-weekly', el => el.textContent.trim());
+  console.log(`Repayment after $35k preset: ${weeklyAfter35k}`);
+
+  // Test Fortnightly frequency toggle
+  await page.click('[data-freq="fortnightly"]');
+  await new Promise(r => setTimeout(r, 300));
+  const fortnightlyFigure = await page.$eval('#figure-weekly', el => el.textContent.trim());
+  const freqLabel = await page.$eval('#figure-freq-label', el => el.textContent.trim());
+  console.log(`Fortnightly repayment: ${fortnightlyFigure} ${freqLabel}`);
+
+  // Switch back to weekly
+  await page.click('[data-freq="weekly"]');
+  await new Promise(r => setTimeout(r, 200));
+
+  // Expand CCCFA breakdown panel
+  await page.click('#btn-toggle-breakdown');
+  await new Promise(r => setTimeout(r, 200));
+  const isBreakdownOpen = await page.$eval('#calc-breakdown-panel', el => el.classList.contains('is-open'));
+  console.log(`CCCFA Breakdown panel opened: ${isBreakdownOpen}`);
+
+  await captureFormPanel('form-step-1.png');
+
+  // Advance to Step 2
+  console.log('Advancing to Step 2 (About You)...');
   await page.click('#btn-form-next');
   await new Promise(r => setTimeout(r, 400));
 
-  // Check Step 2 is active
   const isStep2Active = await page.$eval('[data-step="2"].form-step-content', el => el.classList.contains('is-active'));
   console.log(`Step 2 is active: ${isStep2Active}`);
 
-  // Test Step 2 Personal Details Form
-  console.log('\n--- Testing Form Step 2 (Personal Details & 3-Field DOB) ---');
+  // --- STEP 2: About You ---
+  console.log('\n--- Testing Form Step 2: About You & Lead Auto-save ---');
   await page.type('#field-firstname', 'Liam');
   await page.type('#field-lastname', 'Walker');
-  await page.type('#field-email', 'liam.walker@uniquecarsltd.co.nz');
-  await page.type('#field-phone', '021 234 5678');
-  await page.type('#dob-day', '15');
-  await page.type('#dob-month', '06');
-  await page.type('#dob-year', '1992');
-  await page.select('#field-residence', 'Own Home (Mortgage)');
-  await page.type('#field-address', '327 Great South Road, Manurewa, Auckland');
+  await page.type('#field-mobile', '021 234 5678');
+  await page.type('#field-email', 'liam.walker@example.co.nz');
 
-  // Check partial lead saved in localStorage
-  const partialLead = await page.evaluate(() => {
-    return localStorage.getItem('uniquecars_partial_lead');
-  });
-  console.log(`Partial lead saved to localStorage: ${Boolean(partialLead)}`);
+  // Verify 3-field DOB sync
+  const dobVal = await page.$eval('#field-dob', el => el.value);
+  console.log(`3-Field DOB hidden value: ${dobVal}`);
 
-  // Capture Step 2 Form Card
-  if (formPanel) {
-    await formPanel.screenshot({ path: 'form-step-2.png' });
-    console.log('Saved form-step-2.png');
-  }
+  // Verify Marital selection
+  await page.select('#field-marital', 'Single');
 
-  // Submit Step 2
-  console.log('Advancing from Step 2 to Step 3 (clicking Next Step)...');
-  await page.click('#btn-form-next-step2');
+  await captureFormPanel('form-step-2.png');
+
+  // Advance to Step 3 (this triggers saveLeadToStorage in form.js)
+  console.log('Advancing to Step 3 (Living & Work)...');
+  const step2NextBtn = await page.$('.form-step-content[data-step="2"] .btn-form-step-next');
+  await step2NextBtn.click();
   await new Promise(r => setTimeout(r, 400));
 
-  // Check Step 3 is active
+  // Check lead was saved in localStorage
+  const savedLead = await page.evaluate(() => localStorage.getItem('uniquecars_lead'));
+  console.log(`Lead saved to localStorage on Step 2 completion: ${Boolean(savedLead)}`);
+
   const isStep3Active = await page.$eval('[data-step="3"].form-step-content', el => el.classList.contains('is-active'));
   console.log(`Step 3 is active: ${isStep3Active}`);
 
-  // Test Step 3 Review & Submit
-  console.log('\n--- Testing Form Step 3 & Review Summary ---');
-  const summaryName = await page.$eval('#review-name', el => el.textContent.trim());
-  const summaryVehicle = await page.$eval('#review-vehicle', el => el.textContent.trim());
-  const summaryFinance = await page.$eval('#review-finance', el => el.textContent.trim());
-  console.log(`Summary Name: ${summaryName}`);
-  console.log(`Summary Vehicle: ${summaryVehicle}`);
-  console.log(`Summary Finance: ${summaryFinance}`);
+  // --- STEP 3: Living & Work ---
+  console.log('\n--- Testing Form Step 3: Living & Work Details ---');
+  await page.select('#field-living', 'Own House');
+  await page.type('#field-address', '327 Great South Road');
+  await page.type('#field-employer', 'Auckland Council — Specialist');
+  await page.select('#field-employment', 'Full Time');
+  await page.type('#field-income', '5600');
 
-  // Test validation error state: attempt submitting without consent & without income
-  await page.$eval('#field-income', el => el.value = '');
-  await page.click('#btn-form-submit');
+  // Test Credit Issues reveal
+  await page.select('#field-credit-issues', 'yes');
   await new Promise(r => setTimeout(r, 200));
-  if (formPanel) {
-    await formPanel.screenshot({ path: 'form-errors.png' });
-    console.log('Saved form-errors.png (Inline validation errors displayed)');
-  }
+  const isCreditWrapVisible = await page.$eval('#credit-issue-details-wrap', el => el.style.display !== 'none');
+  console.log(`Credit issues conditional field revealed: ${isCreditWrapVisible}`);
+  await page.type('#field-credit-issue-text', 'Resolved telco default from 2022');
 
-  await page.select('#field-employment', 'Full-time permanent');
-  await page.$eval('#field-income', el => el.value = '6800');
-  await page.select('#field-credit', 'Excellent');
+  await captureFormPanel('form-step-3.png');
 
-  // Check Consent Checkbox
-  await page.click('#field-consent');
+  // Advance to Step 4
+  console.log('Advancing to Step 4 (Review & Submit)...');
+  const step3NextBtn = await page.$('.form-step-content[data-step="3"] .btn-form-step-next');
+  await step3NextBtn.click();
+  await new Promise(r => setTimeout(r, 400));
 
-  // Capture Step 3 Form Card ready to submit
-  if (formPanel) {
-    await formPanel.screenshot({ path: 'form-step-3.png' });
-    console.log('Saved form-step-3.png');
-  }
+  const isStep4Active = await page.$eval('[data-step="4"].form-step-content', el => el.classList.contains('is-active'));
+  console.log(`Step 4 is active: ${isStep4Active}`);
 
+  // --- STEP 4: Review, Document Upload & Privacy Act 2020 ---
+  console.log('\n--- Testing Form Step 4: Review Summary, Errors & Privacy Statement ---');
+  const revApplicant = await page.$eval('#review-applicant', el => el.textContent.trim());
+  const revLoan = await page.$eval('#review-loan', el => el.textContent.trim());
+  console.log(`Review Applicant: ${revApplicant}`);
+  console.log(`Review Loan: ${revLoan}`);
+
+  // Test Validation Errors: Attempt submission without accepting Privacy Act 2020
+  await page.click('#btn-form-submit');
+  await new Promise(r => setTimeout(r, 300));
+  await captureFormPanel('form-errors.png');
+  console.log('Saved form-errors.png (Validation error on Privacy consent displayed)');
+
+  // Expand Privacy Act 2020 Statement
+  await page.click('#btn-toggle-privacy-statement');
+  await new Promise(r => setTimeout(r, 300));
+  const isPrivacyOpen = await page.$eval('#privacy-full-statement', el => el.classList.contains('is-open'));
+  console.log(`Privacy statement expanded: ${isPrivacyOpen}`);
+
+  await captureFormPanel('privacy-statement-expanded.png');
+
+  // Check the required consent checkbox
+  await page.click('#field-privacy-consent');
+  await captureFormPanel('form-step-4.png');
+
+  // Submit Application
   console.log('Submitting Application (clicking Submit Application)...');
   await page.click('#btn-form-submit');
   await new Promise(r => setTimeout(r, 500));
 
   const isSuccessActive = await page.$eval('#form-success-card', el => el.classList.contains('is-active'));
   const refCode = await page.$eval('#success-ref-code', el => el.textContent.trim());
+  const successApplicantName = await page.$eval('#success-name', el => el.textContent.trim());
   console.log(`Success card displayed: ${isSuccessActive}`);
+  console.log(`Applicant name in success card: ${successApplicantName}`);
   console.log(`Generated Reference Code: ${refCode}`);
 
-  if (formPanel) {
-    await formPanel.screenshot({ path: 'form-success.png' });
-    console.log('Saved form-success.png');
-  }
+  await captureFormPanel('form-success.png');
+
+  // Test FAQ Accordion
+  console.log('\n--- Testing FAQ Accordion ---');
+  const firstFaq = await page.$('.faq-question');
+  await firstFaq.click();
+  await new Promise(r => setTimeout(r, 200));
+  const isFaqExpanded = await page.$eval('.faq-item', el => el.classList.contains('is-open'));
+  console.log(`FAQ 1 is open: ${isFaqExpanded}`);
+
+  // Test Showroom Status Pill
+  const statusPillText = await page.$eval('#live-showroom-status', el => el.textContent.trim());
+  console.log(`Live Showroom Status text: ${statusPillText}`);
 
   // Test Disclosures Modal
   console.log('\n--- Testing Disclosures Modal ---');
@@ -270,24 +314,16 @@ async function runVerification() {
   const isModalClosed = await page.$eval('#disclosure-modal', el => !el.classList.contains('is-open'));
   console.log(`Modal closed: ${isModalClosed}`);
 
-  // Test FAQ Accordion
-  console.log('\n--- Testing FAQ Accordion ---');
-  const firstFaq = await page.$('.faq-question');
-  await firstFaq.click();
-  await new Promise(r => setTimeout(r, 200));
-  const isFaqExpanded = await page.$eval('.faq-item', el => el.classList.contains('is-open'));
-  console.log(`FAQ 1 is open: ${isFaqExpanded}`);
-
   // Mathematical Contrast Check
   console.log('\n--- WCAG 2.2 Contrast Verification ---');
   const contrastPairs = [
     { name: 'Navy heading (#0B1530) on White (#FFFFFF)', fg: [11, 21, 48], bg: [255, 255, 255] },
     { name: 'Navy text (#0B1530) on Surface (#F5F7FA)', fg: [11, 21, 48], bg: [245, 247, 250] },
-    { name: 'White text (#FFFFFF) on Brand Blue CTA (#1479C9)', fg: [255, 255, 255], bg: [20, 121, 201] },
+    { name: 'Navy text (#0B1530) on Brand Blue CTA (#0C99E9)', fg: [11, 21, 48], bg: [12, 153, 233] },
     { name: 'Charcoal text (#334155) on White (#FFFFFF)', fg: [51, 65, 85], bg: [255, 255, 255] },
     { name: 'Charcoal text (#334155) on Surface (#F5F7FA)', fg: [51, 65, 85], bg: [245, 247, 250] },
-    { name: 'Success Green text (#15803D) on White (#FFFFFF)', fg: [21, 128, 61], bg: [255, 255, 255] },
-    { name: 'White text at 80% on Navy (#0B1530)', fg: [204, 210, 224], bg: [11, 21, 48] }
+    { name: 'Success Green text (#16A34A) on White (#FFFFFF)', fg: [22, 163, 74], bg: [255, 255, 255] },
+    { name: 'White text (#FFFFFF) on Navy (#0B1530)', fg: [255, 255, 255], bg: [11, 21, 48] }
   ];
 
   function getLuminance(r, g, b) {
@@ -324,7 +360,9 @@ async function runVerification() {
     'form-step-1.png',
     'form-step-2.png',
     'form-step-3.png',
+    'form-step-4.png',
     'form-errors.png',
+    'privacy-statement-expanded.png',
     'form-success.png'
   ].forEach(file => {
     if (fs.existsSync(file)) {

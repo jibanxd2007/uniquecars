@@ -1,28 +1,18 @@
 /* ==========================================================================
-   UNIQUE CARS (NZ) LTD — 3-STEP FINANCE APPLICATION FORM
-   Step 1: Vehicle & Calculator · Step 2: Personal Details · Step 3: Review & Submit
-   Partial Lead Persistence · Inline Validation · 3-Field DOB UX · Success Screen
+   UNIQUE CARS (NZ) LTD — 4-STEP FINANCE APPLICATION FORM
+   Step 1: Loan Details (Merged Calculator)
+   Step 2: About You (Lead Auto-save on completion)
+   Step 3: Living & Work Details
+   Step 4: Review, Optional Documents & Privacy Act 2020 Consent
+   Inline Validation · Green Ticks · Plain-English Errors · Success Screen
    ========================================================================== */
-
-const VEHICLE_MODELS = {
-  Toyota: ['Aqua Hybrid', 'Corolla', 'Prius', 'RAV4', 'Hilux', 'Vitz', 'Estima / Alphard', 'Land Cruiser Prado'],
-  Subaru: ['Forester', 'Outback', 'Legacy', 'Impreza', 'XV', 'Levorg', 'Exiga'],
-  Nissan: ['Leaf EV', 'Note e-Power', 'X-Trail', 'Serena', 'Tiida', 'Qashqai / Dualis', 'Navara'],
-  Mazda: ['CX-5', 'Axela (Mazda3)', 'Demio (Mazda2)', 'Atenza (Mazda6)', 'CX-3', 'Biante'],
-  Honda: ['Fit / Jazz', 'Vezel Hybrid', 'CR-V', 'Civic', 'Odyssey', 'Shuttle'],
-  Mitsubishi: ['Outlander PHEV', 'Triton', 'ASX', 'Eclipse Cross', 'Delica D:5'],
-  Suzuki: ['Swift', 'Jimny', 'Vitara', 'SX4 S-Cross'],
-  Ford: ['Ranger', 'Everest', 'Focus', 'Transit'],
-  European: ['BMW 3-Series / 5-Series / X3', 'Audi Q5 / A4', 'Mercedes-Benz C-Class / GLC', 'Volkswagen Golf / Tiguan'],
-  Other: ['Sedan', 'Hatchback', 'SUV / 4X4', 'Station Wagon', 'Van / People Mover']
-};
 
 export function initApplyForm() {
   const form = document.getElementById('finance-enquiry-form');
   if (!form) return;
 
   let currentStep = 1;
-  const totalSteps = 3;
+  const totalSteps = 4;
 
   const stepEyebrow = document.getElementById('apply-step-eyebrow');
   const stepperItems = document.querySelectorAll('.stepper-step');
@@ -33,29 +23,51 @@ export function initApplyForm() {
   const successCard = document.getElementById('form-success-card');
   const successName = document.getElementById('success-name');
 
-  const makeSelect = document.getElementById('field-make');
-  const modelSelect = document.getElementById('field-model');
-
-  // Dynamic model population based on Make
-  if (makeSelect && modelSelect) {
-    makeSelect.addEventListener('change', () => {
-      const selectedMake = makeSelect.value;
-      modelSelect.innerHTML = '<option value="">Select model</option>';
-      if (selectedMake && VEHICLE_MODELS[selectedMake]) {
-        VEHICLE_MODELS[selectedMake].forEach(mod => {
-          const opt = document.createElement('option');
-          opt.value = mod;
-          opt.textContent = mod;
-          modelSelect.appendChild(opt);
-        });
-        modelSelect.disabled = false;
-      } else {
-        modelSelect.disabled = true;
-      }
+  // Joint Application Toggle
+  const jointToggle = document.getElementById('field-joint-toggle');
+  const jointFieldsContainer = document.getElementById('joint-partner-fields');
+  if (jointToggle && jointFieldsContainer) {
+    jointToggle.addEventListener('change', () => {
+      jointFieldsContainer.style.display = jointToggle.checked ? 'block' : 'none';
+      const partnerInputs = jointFieldsContainer.querySelectorAll('input');
+      partnerInputs.forEach(inp => {
+        inp.required = jointToggle.checked;
+      });
     });
   }
 
-  // DOB 3-Field UX Sync with hidden/synced #field-dob
+  // Credit Issues Toggle
+  const creditIssueSelect = document.getElementById('field-credit-issues');
+  const creditIssueDetailsWrap = document.getElementById('credit-issue-details-wrap');
+  if (creditIssueSelect && creditIssueDetailsWrap) {
+    creditIssueSelect.addEventListener('change', () => {
+      creditIssueDetailsWrap.style.display = creditIssueSelect.value === 'yes' ? 'block' : 'none';
+    });
+  }
+
+  // NZ Residency Toggle
+  const residencySelect = document.getElementById('field-residency');
+  const visaTypeWrap = document.getElementById('visa-type-wrap');
+  if (residencySelect && visaTypeWrap) {
+    residencySelect.addEventListener('change', () => {
+      visaTypeWrap.style.display = residencySelect.value === 'no' ? 'block' : 'none';
+    });
+  }
+
+  // Expandable Privacy Statement Toggle
+  const privacyToggleBtn = document.getElementById('btn-toggle-privacy-statement');
+  const privacyStatementPanel = document.getElementById('privacy-full-statement');
+  if (privacyToggleBtn && privacyStatementPanel) {
+    privacyToggleBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isExpanded = privacyStatementPanel.classList.toggle('is-open');
+      privacyToggleBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+      const arrow = privacyToggleBtn.querySelector('.privacy-toggle-arrow');
+      if (arrow) arrow.textContent = isExpanded ? '▴' : '▾';
+    });
+  }
+
+  // DOB 3-Field UX Synchronization (Day, Month, Year -> hidden field)
   const dobDay = document.getElementById('dob-day');
   const dobMonth = document.getElementById('dob-month');
   const dobYear = document.getElementById('dob-year');
@@ -104,58 +116,82 @@ export function initApplyForm() {
     }
   }
 
-  // Partial lead auto-save to localStorage
-  function savePartialLead() {
+  // Address Autocomplete mock simulator (Fills suburb and city on Great South Road)
+  const addressInput = document.getElementById('field-address');
+  const suburbInput = document.getElementById('field-suburb');
+  const cityInput = document.getElementById('field-city');
+  if (addressInput) {
+    addressInput.addEventListener('blur', () => {
+      const val = addressInput.value.toLowerCase();
+      if (val.includes('manurewa') || val.includes('great south')) {
+        if (suburbInput && !suburbInput.value) suburbInput.value = 'Manurewa';
+        if (cityInput && !cityInput.value) cityInput.value = 'Auckland';
+      }
+    });
+  }
+
+  // Lead auto-save on completion of Step 2
+  function saveLeadToStorage() {
     try {
-      const partialLead = {
+      const leadData = {
         firstName: document.getElementById('field-firstname')?.value.trim() || '',
         lastName: document.getElementById('field-lastname')?.value.trim() || '',
-        phone: document.getElementById('field-phone')?.value.trim() || '',
+        mobile: document.getElementById('field-mobile')?.value.trim() || '',
         email: document.getElementById('field-email')?.value.trim() || '',
-        price: document.getElementById('field-price')?.value || '45000',
-        make: document.getElementById('field-make')?.value || '',
-        model: document.getElementById('field-model')?.value || '',
-        updatedAt: new Date().toISOString()
+        amount: document.getElementById('field-price')?.value || '20000',
+        term: document.getElementById('slider-term')?.value || '36',
+        vehicleDesc: document.getElementById('field-vehicle-desc')?.value.trim() || '',
+        savedAt: new Date().toISOString()
       };
-      if (partialLead.firstName || partialLead.phone) {
-        localStorage.setItem('uniquecars_partial_lead', JSON.stringify(partialLead));
+      if (leadData.firstName || leadData.mobile) {
+        localStorage.setItem('uniquecars_lead', JSON.stringify(leadData));
       }
     } catch (e) {
       // Storage unavailable or disabled
     }
   }
 
-  ['field-firstname', 'field-lastname', 'field-phone', 'field-email'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.addEventListener('input', savePartialLead);
-      el.addEventListener('change', savePartialLead);
-    }
-  });
-
-  // Populate dynamic review summary on Step 3
+  // Populate dynamic review summary on Step 4
   function updateReviewSummary() {
     const firstName = document.getElementById('field-firstname')?.value.trim() || '';
     const lastName = document.getElementById('field-lastname')?.value.trim() || '';
+    const mobile = document.getElementById('field-mobile')?.value.trim() || '';
     const email = document.getElementById('field-email')?.value.trim() || '';
-    const phone = document.getElementById('field-phone')?.value.trim() || '';
-    const make = document.getElementById('field-make')?.value || 'Not specified';
-    const model = document.getElementById('field-model')?.value || '';
-    const year = document.getElementById('field-year')?.value || '';
-    const price = document.getElementById('field-price')?.value || '45000';
-    const term = document.getElementById('slider-term')?.value || '3';
-    const weeklyFig = document.getElementById('figure-weekly')?.textContent || 'NZ$ 315';
+    const vehicleDesc = document.getElementById('field-vehicle-desc')?.value.trim() || 'Any suitable vehicle';
+    const price = document.getElementById('field-price')?.value || '20000';
+    const deposit = document.getElementById('field-deposit')?.value || '0';
+    const tradein = document.getElementById('field-tradein')?.value || '0';
+    const termMonths = document.getElementById('slider-term')?.value || '36';
+    const weeklyFig = document.getElementById('figure-weekly')?.textContent || 'NZ$ 239';
+    const comfortable = document.getElementById('field-comfortable-pay')?.value || '';
+    const comfortableFreq = document.getElementById('field-comfortable-freq')?.value || 'week';
+    const living = document.getElementById('field-living')?.value || '';
+    const address = document.getElementById('field-address')?.value || '';
+    const employment = document.getElementById('field-employment')?.value || '';
+    const employer = document.getElementById('field-employer')?.value || '';
+    const income = document.getElementById('field-income')?.value || '';
+    const incomeFreq = document.getElementById('field-income-freq')?.value || 'month';
 
-    const reviewName = document.getElementById('review-name');
-    const reviewPhone = document.getElementById('review-phone');
-    const reviewVehicle = document.getElementById('review-vehicle');
-    const reviewFinance = document.getElementById('review-finance');
+    const netPrincipal = Math.max(1000, parseInt(price, 10) - parseInt(deposit || 0, 10) - parseInt(tradein || 0, 10));
 
-    if (reviewName) reviewName.textContent = `${firstName} ${lastName}`.trim() || '—';
-    if (reviewPhone) reviewPhone.textContent = `${phone} ${email ? '• ' + email : ''}`.trim() || '—';
-    if (reviewVehicle) reviewVehicle.textContent = `${make} ${model} ${year ? '(' + year + ')' : ''}`.trim() || '—';
-    if (reviewFinance) {
-      reviewFinance.textContent = `NZ$ ${parseInt(price, 10).toLocaleString('en-NZ')} over ${term} ${parseInt(term, 10) === 1 ? 'Year' : 'Years'} (~${weeklyFig}/wk)`;
+    const revVehicle = document.getElementById('review-vehicle');
+    const revLoan = document.getElementById('review-loan');
+    const revApplicant = document.getElementById('review-applicant');
+    const revLiving = document.getElementById('review-living');
+    const revWork = document.getElementById('review-work');
+
+    if (revVehicle) revVehicle.textContent = vehicleDesc;
+    if (revLoan) {
+      revLoan.textContent = `NZ$ ${netPrincipal.toLocaleString('en-NZ')} over ${termMonths} mo (~${weeklyFig}/wk)${comfortable ? ' • Budget: NZ$ ' + comfortable + '/' + comfortableFreq : ''}`;
+    }
+    if (revApplicant) {
+      revApplicant.textContent = `${firstName} ${lastName} • ${mobile} • ${email}`;
+    }
+    if (revLiving) {
+      revLiving.textContent = `${living ? living + ' — ' : ''}${address || 'Auckland'}`;
+    }
+    if (revWork) {
+      revWork.textContent = `${employment}${employer ? ' at ' + employer : ''} • NZ$ ${income}/${incomeFreq}`;
     }
   }
 
@@ -213,24 +249,22 @@ export function initApplyForm() {
     }
   }
 
-  // Inline blur validation configuration
-  const inputsToValidate = [
-    { id: 'field-make', msg: 'Please select a vehicle make' },
-    { id: 'field-model', msg: 'Please select a vehicle model' },
-    { id: 'field-year', msg: 'Please select vehicle year' },
-    { id: 'field-price', validate: v => parseInt(v, 10) >= 5000 && parseInt(v, 10) <= 150000, msg: 'Amount must be between $5,000 and $150,000' },
+  // Field validation rules
+  const fieldValidationMap = [
+    { id: 'field-price', validate: v => parseInt(v, 10) >= 1000, msg: 'Please enter a valid loan or vehicle price amount' },
     { id: 'field-firstname', msg: 'Please enter your first name' },
     { id: 'field-lastname', msg: 'Please enter your last name' },
+    { id: 'field-mobile', validate: validateNZPhone, msg: 'Please enter a valid NZ mobile or phone number' },
     { id: 'field-email', validate: validateEmail, msg: 'Please enter a valid email address' },
-    { id: 'field-phone', validate: validateNZPhone, msg: 'Please enter a valid NZ mobile or phone number' },
     { id: 'field-dob', validate: validateAge18, msg: 'Applicants must be at least 18 years old' },
-    { id: 'field-residence', msg: 'Please select your residential status' },
-    { id: 'field-employment', msg: 'Please select your employment status' },
-    { id: 'field-income', validate: v => parseInt(v, 10) > 0, msg: 'Please enter your regular monthly income' },
-    { id: 'field-credit', msg: 'Please select an estimated credit profile' }
+    { id: 'field-marital', msg: 'Please select your marital status' },
+    { id: 'field-living', msg: 'Please select your living situation' },
+    { id: 'field-address', msg: 'Please enter your current residential address' },
+    { id: 'field-employment', msg: 'Please select your employment type' },
+    { id: 'field-income', validate: v => parseInt(v, 10) > 0, msg: 'Please enter your take-home pay amount' }
   ];
 
-  inputsToValidate.forEach(item => {
+  fieldValidationMap.forEach(item => {
     const el = document.getElementById(item.id);
     if (!el) return;
     el.addEventListener('blur', () => {
@@ -257,45 +291,20 @@ export function initApplyForm() {
   function validateStep(step) {
     let isValid = true;
     if (step === 1) {
-      // Step 1: Vehicle & Loan Details
-      const fields = ['field-make', 'field-model', 'field-year', 'field-price'];
-      fields.forEach(fid => {
-        const config = inputsToValidate.find(c => c.id === fid);
-        const el = document.getElementById(fid);
-        const val = el?.value.trim();
-        if (!val) {
-          setFieldError(fid, config?.msg || 'This field is required');
-          isValid = false;
-        } else if (config?.validate && !config.validate(val)) {
-          setFieldError(fid, config.msg);
-          isValid = false;
-        } else {
-          clearFieldError(fid);
-        }
-      });
+      // Step 1: Loan Details
+      const p = document.getElementById('field-price')?.value.trim();
+      if (!p || parseInt(p, 10) < 1000) {
+        setFieldError('field-price', 'Please enter a valid finance amount');
+        isValid = false;
+      } else {
+        clearFieldError('field-price');
+      }
     } else if (step === 2) {
-      // Step 2: Personal Details
+      // Step 2: About You
       syncDobToHidden();
-      const fields = ['field-firstname', 'field-lastname', 'field-email', 'field-phone', 'field-dob', 'field-residence'];
+      const fields = ['field-firstname', 'field-lastname', 'field-mobile', 'field-email', 'field-dob', 'field-marital'];
       fields.forEach(fid => {
-        const config = inputsToValidate.find(c => c.id === fid);
-        const el = document.getElementById(fid);
-        const val = el?.value.trim();
-        if (!val) {
-          setFieldError(fid, config?.msg || 'This field is required');
-          isValid = false;
-        } else if (config?.validate && !config.validate(val)) {
-          setFieldError(fid, config.msg);
-          isValid = false;
-        } else {
-          clearFieldError(fid);
-        }
-      });
-    } else if (step === 3) {
-      // Step 3: Review & Submit
-      const fields = ['field-employment', 'field-income', 'field-credit'];
-      fields.forEach(fid => {
-        const config = inputsToValidate.find(c => c.id === fid);
+        const config = fieldValidationMap.find(c => c.id === fid);
         const el = document.getElementById(fid);
         const val = el?.value.trim();
         if (!val) {
@@ -309,12 +318,35 @@ export function initApplyForm() {
         }
       });
 
-      const consentCheck = document.getElementById('field-consent');
-      if (consentCheck && !consentCheck.checked) {
-        setFieldError('field-consent', 'Please agree to the privacy policy, credit check consent, and CCCFA terms');
+      // If valid, immediately auto-save partial lead!
+      if (isValid) {
+        saveLeadToStorage();
+      }
+    } else if (step === 3) {
+      // Step 3: Living & Work
+      const fields = ['field-living', 'field-address', 'field-employment', 'field-income'];
+      fields.forEach(fid => {
+        const config = fieldValidationMap.find(c => c.id === fid);
+        const el = document.getElementById(fid);
+        const val = el?.value.trim();
+        if (!val) {
+          setFieldError(fid, config?.msg || 'This field is required');
+          isValid = false;
+        } else if (config?.validate && !config.validate(val)) {
+          setFieldError(fid, config.msg);
+          isValid = false;
+        } else {
+          clearFieldError(fid);
+        }
+      });
+    } else if (step === 4) {
+      // Step 4: Review & Privacy Consent
+      const privacyCheck = document.getElementById('field-privacy-consent');
+      if (privacyCheck && !privacyCheck.checked) {
+        setFieldError('field-privacy-consent', 'You must accept the Privacy Act 2020 authorisation to submit');
         isValid = false;
       } else {
-        clearFieldError('field-consent');
+        clearFieldError('field-privacy-consent');
       }
     }
     return isValid;
@@ -370,6 +402,9 @@ export function initApplyForm() {
     // Prev button state
     if (btnPrev) {
       btnPrev.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+      if (currentStep === 2) btnPrev.textContent = '← Back to Loan Details';
+      else if (currentStep === 3) btnPrev.textContent = '← Back to About You';
+      else if (currentStep === 4) btnPrev.textContent = '← Back to Living & Work';
     }
 
     // Next / Submit button state
@@ -382,7 +417,7 @@ export function initApplyForm() {
       if (btnSubmit) btnSubmit.style.display = 'none';
     }
 
-    // Smooth scroll to top of form on mobile when transitioning between steps
+    // Smooth scroll to top of form on mobile when user triggers step change
     if (shouldScroll && window.innerWidth <= 1024) {
       const formTop = form.getBoundingClientRect().top + window.scrollY - 80;
       window.scrollTo({ top: formTop, behavior: 'smooth' });
@@ -398,16 +433,15 @@ export function initApplyForm() {
     });
   }
 
-  // Alias button for test compatibility
-  const btnApplyEstimate = document.getElementById('btn-apply-estimate');
-  if (btnApplyEstimate && btnApplyEstimate !== btnNext) {
-    btnApplyEstimate.addEventListener('click', (e) => {
+  // Generic step forward alias buttons (e.g. for Step 2 and Step 3)
+  document.querySelectorAll('.btn-form-step-next').forEach(btn => {
+    btn.addEventListener('click', (e) => {
       e.preventDefault();
       if (validateStep(currentStep)) {
         goToStep(currentStep + 1, true);
       }
     });
-  }
+  });
 
   if (btnPrev) {
     btnPrev.addEventListener('click', (e) => {
@@ -423,7 +457,7 @@ export function initApplyForm() {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const targetStep = parseInt(link.getAttribute('data-goto-step'), 10);
-      if (!isNaN(targetStep) && targetStep >= 1 && targetStep <= 3) {
+      if (!isNaN(targetStep) && targetStep >= 1 && targetStep <= totalSteps) {
         goToStep(targetStep, true);
       }
     });
@@ -432,19 +466,19 @@ export function initApplyForm() {
   // Handle form submission
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (!validateStep(3)) return;
+    if (!validateStep(4)) return;
 
     const firstName = document.getElementById('field-firstname')?.value.trim() || 'there';
     if (successName) successName.textContent = firstName;
 
-    // Generate reference code
+    // Generate unique reference code
     const randCode = 'UC-' + Math.floor(10000 + Math.random() * 90000);
     const refEl = document.getElementById('success-ref-code');
     if (refEl) refEl.textContent = randCode;
 
     // Clear partial lead from localStorage on successful completion
     try {
-      localStorage.removeItem('uniquecars_partial_lead');
+      localStorage.removeItem('uniquecars_lead');
     } catch (e) {}
 
     // Hide form content and show success card
@@ -466,6 +500,6 @@ export function initApplyForm() {
     }, { passive: true });
   }
 
-  // Initialize on Step 1
-  goToStep(1);
+  // Initialize on Step 1 without scrolling
+  goToStep(1, false);
 }
