@@ -13,7 +13,8 @@
   --color-accent-hover:   #0F65AB; /* Deeper blue for hover state */
   --color-accent-light:   #EBF5FC; /* 10% soft blue tint for badges */
   --color-accent-ink:     #0D61A3; /* High-contrast blue for text */
-  --color-success:        #16A34A; /* Emerald green for approvals & positive states */
+  --color-success:        #16A34A; /* Emerald green for icons, badges & positive UI */
+  --color-success-dark:   #15803D; /* High contrast green for legible text (4.5:1+ WCAG AA) */
   --color-success-light:  #DCFCE7;
   --color-background:     #FFFFFF; /* Pure White */
   --color-surface:        #F5F7FA; /* Soft Surface — section rhythm */
@@ -37,16 +38,16 @@
   --font-body:    "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
   /* Scale */
-  --fs-h1:      clamp(2.5rem, 1.8rem + 3.2vw, 4.25rem); /* 40px mobile -> 68px desktop */
-  --fs-h2:      clamp(1.875rem, 1.4rem + 2vw, 2.75rem); /* 30px mobile -> 44px desktop */
-  --fs-h3:      clamp(1.375rem, 1.15rem + 0.8vw, 1.75rem); /* 22px mobile -> 28px desktop */
+  --fs-h1:      clamp(2.125rem, 1.6rem + 2.4vw, 4rem); /* 34px mobile -> 64px desktop */
+  --fs-h2:      clamp(1.75rem, 1.35rem + 1.8vw, 2.5rem); /* 28px mobile -> 40px desktop */
+  --fs-h3:      clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem); /* 20px mobile -> 26px desktop */
   --fs-h4:      1.25rem;  /* 20px */
-  --fs-lead:    clamp(1.0625rem, 1rem + 0.3vw, 1.25rem); /* 17-20px */
-  --fs-body:    1.0625rem; /* 17px */
+  --fs-lead:    1.0625rem; /* 17px lead */
+  --fs-body:    1.0625rem; /* 17px body */
   --fs-ui:      0.9375rem; /* 15px */
-  --fs-small:   0.875rem;  /* 14px minimum visible size — NO 11px microcopy */
+  --fs-small:   0.875rem;  /* 14px minimum visible floor — NO pale grey microcopy */
   --fs-eyebrow: 0.8125rem; /* 13-14px uppercase */
-  --fs-figure:  clamp(2.25rem, 1.6rem + 2.5vw, 3.5rem);
+  --fs-figure:  clamp(2rem, 1.5rem + 2vw, 3rem);
 
   /* ------------------------------------------------------------------------
      3. Layout & 8px Spacing Grid
@@ -63,18 +64,18 @@
   --space-16:  64px;
   --space-20:  80px;
 
-  --section-py: clamp(52px, 6.5vw, 88px); /* Cut oversized vertical gaps by ~30% */
+  --section-py: clamp(40px, 5vw, 68px); /* Reduced vertical gaps by 30-40% */
   --container-max: 1240px;
   --gutter-desktop: 24px;
   --gutter-mobile: 16px;
 
   /* ------------------------------------------------------------------------
-     4. Radii & Soft Layered Shadows
+     4. Radii & Soft Layered Shadows (16px Card Radius)
      ------------------------------------------------------------------------ */
   --radius-sm:   8px;   /* Small elements, badges */
   --radius-md:   12px;  /* Inputs, buttons */
-  --radius-card: 18px;  /* Cards, panels (12-20px) */
-  --radius-hero: 22px;  /* Calculator & hero card */
+  --radius-card: 16px;  /* Cards, panels (16px) */
+  --radius-hero: 16px;  /* Calculator & hero card */
   --radius-pill: 9999px; /* Badges & pill buttons */
 
   --shadow-sm:    0 1px 2px rgba(11, 21, 48, 0.04);

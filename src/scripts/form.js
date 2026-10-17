@@ -1,6 +1,7 @@
 /* ==========================================================================
-   UNIQUE CARS (NZ) LTD — MULTI-STEP FINANCE APPLICATION FORM
-   3-Step State · 3-Field DOB UX · Validation · Dynamic Vehicle Models · Success State
+   UNIQUE CARS (NZ) LTD — 3-STEP FINANCE APPLICATION FORM
+   Step 1: Vehicle & Calculator · Step 2: Personal Details · Step 3: Review & Submit
+   Partial Lead Persistence · Inline Validation · 3-Field DOB UX · Success Screen
    ========================================================================== */
 
 const VEHICLE_MODELS = {
@@ -24,12 +25,13 @@ export function initApplyForm() {
   const totalSteps = 3;
 
   const stepEyebrow = document.getElementById('apply-step-eyebrow');
-  const stepperItems = document.querySelectorAll('.stepper-item, .stepper-step');
+  const stepperItems = document.querySelectorAll('.stepper-step');
   const stepContents = document.querySelectorAll('.form-step-content');
   const btnPrev = document.getElementById('btn-form-prev');
   const btnNext = document.getElementById('btn-form-next');
   const btnSubmit = document.getElementById('btn-form-submit');
   const successCard = document.getElementById('form-success-card');
+  const successName = document.getElementById('success-name');
 
   const makeSelect = document.getElementById('field-make');
   const modelSelect = document.getElementById('field-model');
@@ -88,7 +90,6 @@ export function initApplyForm() {
           clearFieldError('field-dob');
         }
       });
-      // Auto-advance cursor for frictionless date entry
       inp.addEventListener('keyup', (e) => {
         if (inp.id === 'dob-day' && inp.value.length === 2 && e.key >= '0' && e.key <= '9') {
           dobMonth.focus();
@@ -103,30 +104,58 @@ export function initApplyForm() {
     }
   }
 
+  // Partial lead auto-save to localStorage
+  function savePartialLead() {
+    try {
+      const partialLead = {
+        firstName: document.getElementById('field-firstname')?.value.trim() || '',
+        lastName: document.getElementById('field-lastname')?.value.trim() || '',
+        phone: document.getElementById('field-phone')?.value.trim() || '',
+        email: document.getElementById('field-email')?.value.trim() || '',
+        price: document.getElementById('field-price')?.value || '45000',
+        make: document.getElementById('field-make')?.value || '',
+        model: document.getElementById('field-model')?.value || '',
+        updatedAt: new Date().toISOString()
+      };
+      if (partialLead.firstName || partialLead.phone) {
+        localStorage.setItem('uniquecars_partial_lead', JSON.stringify(partialLead));
+      }
+    } catch (e) {
+      // Storage unavailable or disabled
+    }
+  }
+
+  ['field-firstname', 'field-lastname', 'field-phone', 'field-email'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('input', savePartialLead);
+      el.addEventListener('change', savePartialLead);
+    }
+  });
+
   // Populate dynamic review summary on Step 3
   function updateReviewSummary() {
     const firstName = document.getElementById('field-firstname')?.value.trim() || '';
     const lastName = document.getElementById('field-lastname')?.value.trim() || '';
+    const email = document.getElementById('field-email')?.value.trim() || '';
+    const phone = document.getElementById('field-phone')?.value.trim() || '';
     const make = document.getElementById('field-make')?.value || 'Not specified';
     const model = document.getElementById('field-model')?.value || '';
+    const year = document.getElementById('field-year')?.value || '';
     const price = document.getElementById('field-price')?.value || '45000';
-    const term = document.getElementById('field-term')?.value || '3';
-    const income = document.getElementById('field-income')?.value || '0';
+    const term = document.getElementById('slider-term')?.value || '3';
+    const weeklyFig = document.getElementById('figure-weekly')?.textContent || 'NZ$ 315';
 
     const reviewName = document.getElementById('review-name');
+    const reviewPhone = document.getElementById('review-phone');
     const reviewVehicle = document.getElementById('review-vehicle');
     const reviewFinance = document.getElementById('review-finance');
-    const reviewIncome = document.getElementById('review-income');
 
     if (reviewName) reviewName.textContent = `${firstName} ${lastName}`.trim() || '—';
-    if (reviewVehicle) reviewVehicle.textContent = `${make} ${model}`.trim() || '—';
+    if (reviewPhone) reviewPhone.textContent = `${phone} ${email ? '• ' + email : ''}`.trim() || '—';
+    if (reviewVehicle) reviewVehicle.textContent = `${make} ${model} ${year ? '(' + year + ')' : ''}`.trim() || '—';
     if (reviewFinance) {
-      const termNum = parseInt(term, 10);
-      const termDisplay = termNum > 10 ? `${termNum} months` : `${termNum} ${termNum === 1 ? 'Year' : 'Years'}`;
-      reviewFinance.textContent = `NZ$ ${parseInt(price, 10).toLocaleString('en-NZ')} over ${termDisplay}`;
-    }
-    if (reviewIncome) {
-      reviewIncome.textContent = `NZ$ ${parseInt(income, 10).toLocaleString('en-NZ')} / month`;
+      reviewFinance.textContent = `NZ$ ${parseInt(price, 10).toLocaleString('en-NZ')} over ${term} ${parseInt(term, 10) === 1 ? 'Year' : 'Years'} (~${weeklyFig}/wk)`;
     }
   }
 
@@ -155,7 +184,7 @@ export function initApplyForm() {
   function setFieldError(fieldId, errorMsg) {
     const input = document.getElementById(fieldId);
     if (!input) return;
-    const group = input.closest('.form-group');
+    const group = input.closest('.form-group') || input.closest('.checkbox-group');
     if (group) {
       group.classList.add('has-error');
       let errEl = group.querySelector('.form-error-msg');
@@ -167,32 +196,35 @@ export function initApplyForm() {
       }
       errEl.textContent = errorMsg;
     }
+    input.classList.remove('is-valid');
     input.classList.add('is-invalid');
   }
 
   function clearFieldError(fieldId) {
     const input = document.getElementById(fieldId);
     if (!input) return;
-    const group = input.closest('.form-group');
+    const group = input.closest('.form-group') || input.closest('.checkbox-group');
     if (group) {
       group.classList.remove('has-error');
     }
     input.classList.remove('is-invalid');
+    if (input.type !== 'checkbox' && input.value && input.value.trim()) {
+      input.classList.add('is-valid');
+    }
   }
 
-  // Inline blur validation for inputs
+  // Inline blur validation configuration
   const inputsToValidate = [
+    { id: 'field-make', msg: 'Please select a vehicle make' },
+    { id: 'field-model', msg: 'Please select a vehicle model' },
+    { id: 'field-year', msg: 'Please select vehicle year' },
+    { id: 'field-price', validate: v => parseInt(v, 10) >= 5000 && parseInt(v, 10) <= 150000, msg: 'Amount must be between $5,000 and $150,000' },
     { id: 'field-firstname', msg: 'Please enter your first name' },
     { id: 'field-lastname', msg: 'Please enter your last name' },
     { id: 'field-email', validate: validateEmail, msg: 'Please enter a valid email address' },
     { id: 'field-phone', validate: validateNZPhone, msg: 'Please enter a valid NZ mobile or phone number' },
     { id: 'field-dob', validate: validateAge18, msg: 'Applicants must be at least 18 years old' },
     { id: 'field-residence', msg: 'Please select your residential status' },
-    { id: 'field-make', msg: 'Please select a vehicle make' },
-    { id: 'field-model', msg: 'Please select a vehicle model' },
-    { id: 'field-year', msg: 'Please select vehicle year' },
-    { id: 'field-price', validate: v => parseInt(v, 10) >= 5000 && parseInt(v, 10) <= 150000, msg: 'Amount must be between $5,000 and $150,000' },
-    { id: 'field-term', msg: 'Please select a finance term' },
     { id: 'field-employment', msg: 'Please select your employment status' },
     { id: 'field-income', validate: v => parseInt(v, 10) > 0, msg: 'Please enter your regular monthly income' },
     { id: 'field-credit', msg: 'Please select an estimated credit profile' }
@@ -225,6 +257,24 @@ export function initApplyForm() {
   function validateStep(step) {
     let isValid = true;
     if (step === 1) {
+      // Step 1: Vehicle & Loan Details
+      const fields = ['field-make', 'field-model', 'field-year', 'field-price'];
+      fields.forEach(fid => {
+        const config = inputsToValidate.find(c => c.id === fid);
+        const el = document.getElementById(fid);
+        const val = el?.value.trim();
+        if (!val) {
+          setFieldError(fid, config?.msg || 'This field is required');
+          isValid = false;
+        } else if (config?.validate && !config.validate(val)) {
+          setFieldError(fid, config.msg);
+          isValid = false;
+        } else {
+          clearFieldError(fid);
+        }
+      });
+    } else if (step === 2) {
+      // Step 2: Personal Details
       syncDobToHidden();
       const fields = ['field-firstname', 'field-lastname', 'field-email', 'field-phone', 'field-dob', 'field-residence'];
       fields.forEach(fid => {
@@ -241,23 +291,8 @@ export function initApplyForm() {
           clearFieldError(fid);
         }
       });
-    } else if (step === 2) {
-      const fields = ['field-make', 'field-model', 'field-year', 'field-price', 'field-term'];
-      fields.forEach(fid => {
-        const config = inputsToValidate.find(c => c.id === fid);
-        const el = document.getElementById(fid);
-        const val = el?.value.trim();
-        if (!val) {
-          setFieldError(fid, config?.msg || 'This field is required');
-          isValid = false;
-        } else if (config?.validate && !config.validate(val)) {
-          setFieldError(fid, config.msg);
-          isValid = false;
-        } else {
-          clearFieldError(fid);
-        }
-      });
     } else if (step === 3) {
+      // Step 3: Review & Submit
       const fields = ['field-employment', 'field-income', 'field-credit'];
       fields.forEach(fid => {
         const config = inputsToValidate.find(c => c.id === fid);
@@ -276,7 +311,7 @@ export function initApplyForm() {
 
       const consentCheck = document.getElementById('field-consent');
       if (consentCheck && !consentCheck.checked) {
-        setFieldError('field-consent', 'Please agree to credit check consent and CCCFA disclosure terms');
+        setFieldError('field-consent', 'Please agree to the privacy policy, credit check consent, and CCCFA terms');
         isValid = false;
       } else {
         clearFieldError('field-consent');
@@ -285,11 +320,11 @@ export function initApplyForm() {
     return isValid;
   }
 
-  function goToStep(step) {
+  function goToStep(step, shouldScroll = false) {
     currentStep = step;
 
     if (stepEyebrow) {
-      stepEyebrow.textContent = `STEP ${currentStep} OF ${totalSteps} • ABOUT 3 MINUTES`;
+      stepEyebrow.textContent = `STEP ${currentStep} OF ${totalSteps}`;
     }
 
     // Update stepper pills
@@ -347,8 +382,8 @@ export function initApplyForm() {
       if (btnSubmit) btnSubmit.style.display = 'none';
     }
 
-    // Scroll smoothly to top of form on mobile
-    if (window.innerWidth <= 1024) {
+    // Smooth scroll to top of form on mobile when transitioning between steps
+    if (shouldScroll && window.innerWidth <= 1024) {
       const formTop = form.getBoundingClientRect().top + window.scrollY - 80;
       window.scrollTo({ top: formTop, behavior: 'smooth' });
     }
@@ -358,7 +393,18 @@ export function initApplyForm() {
     btnNext.addEventListener('click', (e) => {
       e.preventDefault();
       if (validateStep(currentStep)) {
-        goToStep(currentStep + 1);
+        goToStep(currentStep + 1, true);
+      }
+    });
+  }
+
+  // Alias button for test compatibility
+  const btnApplyEstimate = document.getElementById('btn-apply-estimate');
+  if (btnApplyEstimate && btnApplyEstimate !== btnNext) {
+    btnApplyEstimate.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (validateStep(currentStep)) {
+        goToStep(currentStep + 1, true);
       }
     });
   }
@@ -367,20 +413,39 @@ export function initApplyForm() {
     btnPrev.addEventListener('click', (e) => {
       e.preventDefault();
       if (currentStep > 1) {
-        goToStep(currentStep - 1);
+        goToStep(currentStep - 1, true);
       }
     });
   }
+
+  // Jump triggers for Review summary "Edit" links
+  document.querySelectorAll('[data-goto-step]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetStep = parseInt(link.getAttribute('data-goto-step'), 10);
+      if (!isNaN(targetStep) && targetStep >= 1 && targetStep <= 3) {
+        goToStep(targetStep, true);
+      }
+    });
+  });
 
   // Handle form submission
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!validateStep(3)) return;
 
-    // Generate random reference code
+    const firstName = document.getElementById('field-firstname')?.value.trim() || 'there';
+    if (successName) successName.textContent = firstName;
+
+    // Generate reference code
     const randCode = 'UC-' + Math.floor(10000 + Math.random() * 90000);
     const refEl = document.getElementById('success-ref-code');
     if (refEl) refEl.textContent = randCode;
+
+    // Clear partial lead from localStorage on successful completion
+    try {
+      localStorage.removeItem('uniquecars_partial_lead');
+    } catch (e) {}
 
     // Hide form content and show success card
     form.style.display = 'none';
@@ -391,23 +456,15 @@ export function initApplyForm() {
     }
   });
 
-  // Listen for estimate applied from hero
-  function handleEstimateApplied(e) {
-    const { amount, term, deposit } = e.detail;
-    const priceField = document.getElementById('field-price');
-    const termField = document.getElementById('field-term');
-    const depositField = document.getElementById('field-deposit');
-
-    if (priceField) priceField.value = amount;
-    if (termField) termField.value = term;
-    if (depositField) depositField.value = deposit;
-
-    clearFieldError('field-price');
-    clearFieldError('field-term');
+  // Sticky bottom bar mobile scroll listener
+  const mobileBar = document.getElementById('mobile-sticky-bar');
+  if (mobileBar) {
+    window.addEventListener('scroll', () => {
+      const formRect = form.getBoundingClientRect();
+      const isPastForm = formRect.bottom < 0;
+      mobileBar.classList.toggle('is-visible', isPastForm);
+    }, { passive: true });
   }
-
-  window.addEventListener('uniquecars:estimate-applied', handleEstimateApplied);
-  window.addEventListener('velocity:estimate-applied', handleEstimateApplied);
 
   // Initialize on Step 1
   goToStep(1);

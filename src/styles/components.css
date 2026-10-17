@@ -52,31 +52,38 @@
   border-radius: var(--radius-pill) !important;
 }
 
-/* Primary Button on Light Background (Deep Navy) */
+/* Primary CTA Button (Single primary CTA style: Brand Blue #1479C9) */
 .btn-primary {
-  background-color: var(--color-primary);
-  color: #ffffff;
-  border: 1px solid var(--color-primary);
+  background-color: var(--color-accent);
+  color: #ffffff !important;
+  border: 1px solid var(--color-accent);
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(20, 121, 201, 0.28);
 }
 
 .btn-primary:hover {
-  background-color: color-mix(in oklab, #0B0454 88%, #0C99E9 12%);
-  border-color: color-mix(in oklab, #0B0454 88%, #0C99E9 12%);
-  box-shadow: 0 4px 14px rgba(11, 4, 84, 0.25);
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(20, 121, 201, 0.38);
+  transform: translateY(-1px);
 }
 
-/* Accent Button (Vibrant Cyan with Navy Text — Contrast: 5.82:1) */
-.btn-accent {
+/* Accent Button alias */
+.btn-accent,
+.btn-cyan {
   background-color: var(--color-accent);
-  color: var(--color-primary);
+  color: #ffffff;
   border: 1px solid var(--color-accent);
   font-weight: 700;
 }
 
-.btn-accent:hover {
-  background-color: color-mix(in oklab, #0C99E9 90%, white);
-  border-color: color-mix(in oklab, #0C99E9 90%, white);
-  box-shadow: 0 4px 16px -2px rgba(12, 153, 233, 0.45);
+.btn-accent:hover,
+.btn-cyan:hover {
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(20, 121, 201, 0.38);
 }
 
 /* Outline Button on Light */
@@ -103,32 +110,7 @@
 .btn-outline-dark:hover {
   border-color: var(--color-accent);
   color: var(--color-accent);
-  background-color: rgba(12, 153, 233, 0.1);
-}
-
-/* Primary Button on Light Background */
-.btn-primary {
-  background-color: var(--color-primary);
-  color: #ffffff;
-  border: 1px solid var(--color-primary);
-}
-
-.btn-primary:hover {
-  background-color: color-mix(in oklab, #0B0454 88%, #0C99E9 12%);
-  border-color: color-mix(in oklab, #0B0454 88%, #0C99E9 12%);
-}
-
-/* Primary Button on Navy Background (Cyan with Navy Text) */
-.btn-cyan {
-  background-color: var(--color-accent);
-  color: var(--color-primary);
-  border: 1px solid var(--color-accent);
-  font-weight: 700;
-}
-
-.btn-cyan:hover {
-  background-color: color-mix(in oklab, #0C99E9 90%, white);
-  border-color: color-mix(in oklab, #0C99E9 90%, white);
+  background-color: rgba(20, 121, 201, 0.1);
 }
 
 /* Secondary Button with Animated Underline */
@@ -288,16 +270,31 @@
   background-color: var(--color-error-bg);
 }
 
+.input-control.is-valid {
+  border-color: var(--color-success);
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2316A34A' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px 16px;
+}
+
 .form-error-msg {
   display: none;
   font-size: 0.75rem;
   color: var(--color-error);
-  font-weight: 500;
+  font-weight: 600;
   margin-top: var(--space-1);
 }
 
-.form-group.has-error .form-error-msg {
+.form-group.has-error .form-error-msg,
+.checkbox-group.has-error .form-error-msg {
   display: block;
+}
+
+.checkbox-group.has-error input[type="checkbox"] {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 2px var(--color-error-bg);
 }
 
 /* --------------------------------------------------------------------------

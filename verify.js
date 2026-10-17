@@ -92,31 +92,59 @@ async function runVerification() {
   });
   console.log('Saved screenshot-768.png');
 
-  // 5. Viewport 375
+  // 5. Viewport 375 & 390 (Modern Mobile)
   console.log('Testing 375px width (Mobile)...');
   await page.setViewport({ width: 375, height: 812 });
   await triggerAllReveals(page);
   await new Promise(r => setTimeout(r, 300));
+  await page.screenshot({ path: 'screenshot-375-fold.png', fullPage: false });
+  console.log('Saved screenshot-375-fold.png (Above the fold)');
+
   await page.evaluate(() => {
     const h = document.querySelector('.site-header');
     if (h) h.style.position = 'relative';
+    const s = document.getElementById('mobile-sticky-bar');
+    if (s) s.style.display = 'none';
   });
   await page.screenshot({ path: 'screenshot-375.png', fullPage: true });
   await page.evaluate(() => {
     const h = document.querySelector('.site-header');
     if (h) h.style.position = '';
+    const s = document.getElementById('mobile-sticky-bar');
+    if (s) s.style.display = '';
   });
-  console.log('Saved screenshot-375.png');
+  console.log('Saved screenshot-375.png (Full page)');
+
+  // Viewport 390 (Standard modern mobile: iPhone 14/15)
+  console.log('Testing 390px width (Mobile 390)...');
+  await page.setViewport({ width: 390, height: 844 });
+  await triggerAllReveals(page);
+  await new Promise(r => setTimeout(r, 300));
+  await page.screenshot({ path: 'screenshot-390-fold.png', fullPage: false });
+  await page.evaluate(() => {
+    const h = document.querySelector('.site-header');
+    if (h) h.style.position = 'relative';
+    const s = document.getElementById('mobile-sticky-bar');
+    if (s) s.style.display = 'none';
+  });
+  await page.screenshot({ path: 'screenshot-390.png', fullPage: true });
+  await page.evaluate(() => {
+    const h = document.querySelector('.site-header');
+    if (h) h.style.position = '';
+    const s = document.getElementById('mobile-sticky-bar');
+    if (s) s.style.display = '';
+  });
+  console.log('Saved screenshot-390.png');
 
   // 6. Reset to desktop for interactive testing
   await page.setViewport({ width: 1440, height: 900 });
 
-  // Test Estimator
-  console.log('\n--- Testing Estimator ---');
+  // Test Estimator & Step 1 Form
+  console.log('\n--- Testing Estimator & Form Step 1 (Vehicle & Loan Details) ---');
   const initialWeekly = await page.$eval('#figure-weekly', el => el.textContent.trim());
   console.log(`Initial weekly repayment: ${initialWeekly}`);
 
-  // Adjust amount slider
+  // Adjust amount slider to $50,000
   await page.evaluate(() => {
     const slider = document.getElementById('slider-amount');
     slider.value = 50000;
@@ -126,54 +154,65 @@ async function runVerification() {
   const updatedWeekly = await page.$eval('#figure-weekly', el => el.textContent.trim());
   console.log(`Updated weekly repayment (NZ$ 50,000): ${updatedWeekly}`);
 
-  // Click 'Apply with this estimate'
-  console.log('Clicking "Apply with this estimate"...');
-  await page.click('#btn-apply-estimate');
-  await new Promise(r => setTimeout(r, 500));
-  const prefilledPrice = await page.$eval('#field-price', el => el.value);
-  console.log(`Prefilled price in Step 2: NZ$ ${prefilledPrice} (Expected: 50000)`);
+  // Test dynamic make/model selection on Step 1
+  await page.select('#field-make', 'Toyota');
+  await new Promise(r => setTimeout(r, 100));
+  const toyotaModels = await page.$$eval('#field-model option', opts => opts.map(o => o.value).filter(Boolean));
+  console.log(`Toyota models populated: ${toyotaModels.join(', ')}`);
+  await page.select('#field-model', 'Hilux');
+  await page.select('#field-year', '2024–2026');
 
-  // Test Step 1 Form
-  console.log('\n--- Testing Form Step 1 ---');
-  await page.type('#field-firstname', 'Liam');
-  await page.type('#field-lastname', 'Walker');
-  await page.type('#field-email', 'liam.walker@uniquecarsltd.co.nz');
-  await page.type('#field-phone', '021 234 5678');
-  await page.$eval('#field-dob', el => el.value = '1992-06-15');
-  await page.select('#field-residence', 'Own Home (Mortgage)');
+  // Capture Step 1 Form Card
+  const formPanel = await page.$('.form-panel');
+  if (formPanel) {
+    await formPanel.screenshot({ path: 'form-step-1.png' });
+    console.log('Saved form-step-1.png');
+  }
 
-  console.log('Submitting Step 1 (clicking Continue)...');
+  // Submit Step 1
+  console.log('Advancing from Step 1 to Step 2 (clicking Next Step)...');
   await page.click('#btn-form-next');
-  await new Promise(r => setTimeout(r, 300));
+  await new Promise(r => setTimeout(r, 400));
 
   // Check Step 2 is active
   const isStep2Active = await page.$eval('[data-step="2"].form-step-content', el => el.classList.contains('is-active'));
   console.log(`Step 2 is active: ${isStep2Active}`);
 
-  // Test Step 2 Form
-  console.log('\n--- Testing Form Step 2 (Vehicle & Dynamic Models) ---');
-  await page.select('#field-make', 'Toyota');
-  await new Promise(r => setTimeout(r, 100));
-  const toyotaModels = await page.$$eval('#field-model option', opts => opts.map(o => o.value).filter(Boolean));
-  console.log(`Toyota models populated: ${toyotaModels.join(', ')}`);
+  // Test Step 2 Personal Details Form
+  console.log('\n--- Testing Form Step 2 (Personal Details & 3-Field DOB) ---');
+  await page.type('#field-firstname', 'Liam');
+  await page.type('#field-lastname', 'Walker');
+  await page.type('#field-email', 'liam.walker@uniquecarsltd.co.nz');
+  await page.type('#field-phone', '021 234 5678');
+  await page.type('#dob-day', '15');
+  await page.type('#dob-month', '06');
+  await page.type('#dob-year', '1992');
+  await page.select('#field-residence', 'Own Home (Mortgage)');
+  await page.type('#field-address', '327 Great South Road, Manurewa, Auckland');
 
-  await page.select('#field-model', 'Hilux');
-  await page.select('#field-year', '2024–2026');
+  // Check partial lead saved in localStorage
+  const partialLead = await page.evaluate(() => {
+    return localStorage.getItem('uniquecars_partial_lead');
+  });
+  console.log(`Partial lead saved to localStorage: ${Boolean(partialLead)}`);
 
-  console.log('Submitting Step 2 (clicking Continue)...');
-  await page.click('#btn-form-next');
-  await new Promise(r => setTimeout(r, 300));
+  // Capture Step 2 Form Card
+  if (formPanel) {
+    await formPanel.screenshot({ path: 'form-step-2.png' });
+    console.log('Saved form-step-2.png');
+  }
+
+  // Submit Step 2
+  console.log('Advancing from Step 2 to Step 3 (clicking Next Step)...');
+  await page.click('#btn-form-next-step2');
+  await new Promise(r => setTimeout(r, 400));
 
   // Check Step 3 is active
   const isStep3Active = await page.$eval('[data-step="3"].form-step-content', el => el.classList.contains('is-active'));
   console.log(`Step 3 is active: ${isStep3Active}`);
 
-  // Test Step 3 Form & Summary
+  // Test Step 3 Review & Submit
   console.log('\n--- Testing Form Step 3 & Review Summary ---');
-  await page.select('#field-employment', 'Full-time permanent');
-  await page.type('#field-income', '6800');
-  await page.select('#field-credit', 'Excellent');
-
   const summaryName = await page.$eval('#review-name', el => el.textContent.trim());
   const summaryVehicle = await page.$eval('#review-vehicle', el => el.textContent.trim());
   const summaryFinance = await page.$eval('#review-finance', el => el.textContent.trim());
@@ -181,17 +220,41 @@ async function runVerification() {
   console.log(`Summary Vehicle: ${summaryVehicle}`);
   console.log(`Summary Finance: ${summaryFinance}`);
 
-  // Check Consent
+  // Test validation error state: attempt submitting without consent & without income
+  await page.$eval('#field-income', el => el.value = '');
+  await page.click('#btn-form-submit');
+  await new Promise(r => setTimeout(r, 200));
+  if (formPanel) {
+    await formPanel.screenshot({ path: 'form-errors.png' });
+    console.log('Saved form-errors.png (Inline validation errors displayed)');
+  }
+
+  await page.select('#field-employment', 'Full-time permanent');
+  await page.$eval('#field-income', el => el.value = '6800');
+  await page.select('#field-credit', 'Excellent');
+
+  // Check Consent Checkbox
   await page.click('#field-consent');
 
-  console.log('Submitting Enquiry (clicking Send finance enquiry)...');
+  // Capture Step 3 Form Card ready to submit
+  if (formPanel) {
+    await formPanel.screenshot({ path: 'form-step-3.png' });
+    console.log('Saved form-step-3.png');
+  }
+
+  console.log('Submitting Application (clicking Submit Application)...');
   await page.click('#btn-form-submit');
-  await new Promise(r => setTimeout(r, 400));
+  await new Promise(r => setTimeout(r, 500));
 
   const isSuccessActive = await page.$eval('#form-success-card', el => el.classList.contains('is-active'));
   const refCode = await page.$eval('#success-ref-code', el => el.textContent.trim());
   console.log(`Success card displayed: ${isSuccessActive}`);
   console.log(`Generated Reference Code: ${refCode}`);
+
+  if (formPanel) {
+    await formPanel.screenshot({ path: 'form-success.png' });
+    console.log('Saved form-success.png');
+  }
 
   // Test Disclosures Modal
   console.log('\n--- Testing Disclosures Modal ---');
@@ -218,14 +281,13 @@ async function runVerification() {
   // Mathematical Contrast Check
   console.log('\n--- WCAG 2.2 Contrast Verification ---');
   const contrastPairs = [
-    { name: 'Charcoal text (#2C2C2C) on White (#FFFFFF)', fg: [44, 44, 44], bg: [255, 255, 255] },
-    { name: 'Charcoal text (#2C2C2C) on Surface (#F1F2F3)', fg: [44, 44, 44], bg: [241, 242, 243] },
-    { name: 'Navy heading (#0B0454) on White (#FFFFFF)', fg: [11, 4, 84], bg: [255, 255, 255] },
-    { name: 'White text (#FFFFFF) on Navy primary button (#0B0454)', fg: [255, 255, 255], bg: [11, 4, 84] },
-    { name: 'NAVY text (#0B0454) on Cyan button (#0C99E9)', fg: [11, 4, 84], bg: [12, 153, 233] },
-    { name: 'Cyan ink text on White (#FFFFFF)', fg: [10, 85, 150], bg: [255, 255, 255] },
-    { name: 'Muted text (65% charcoal) on White', fg: [100, 100, 100], bg: [255, 255, 255] },
-    { name: 'White text at 70% on Navy (#0B0454)', fg: [180, 178, 205], bg: [11, 4, 84] }
+    { name: 'Navy heading (#0B1530) on White (#FFFFFF)', fg: [11, 21, 48], bg: [255, 255, 255] },
+    { name: 'Navy text (#0B1530) on Surface (#F5F7FA)', fg: [11, 21, 48], bg: [245, 247, 250] },
+    { name: 'White text (#FFFFFF) on Brand Blue CTA (#1479C9)', fg: [255, 255, 255], bg: [20, 121, 201] },
+    { name: 'Charcoal text (#334155) on White (#FFFFFF)', fg: [51, 65, 85], bg: [255, 255, 255] },
+    { name: 'Charcoal text (#334155) on Surface (#F5F7FA)', fg: [51, 65, 85], bg: [245, 247, 250] },
+    { name: 'Success Green text (#15803D) on White (#FFFFFF)', fg: [21, 128, 61], bg: [255, 255, 255] },
+    { name: 'White text at 80% on Navy (#0B1530)', fg: [204, 210, 224], bg: [11, 21, 48] }
   ];
 
   function getLuminance(r, g, b) {
@@ -251,7 +313,20 @@ async function runVerification() {
   await browser.close();
 
   const artifactDir = process.env.ARTIFACT_DIR || 'C:\\Users\\jiban\\.gemini\\antigravity-ide\\brain\\8b637f0a-583e-4625-82f4-52c4ce1bdb71';
-  ['screenshot-1440.png', 'screenshot-1280.png', 'screenshot-768.png', 'screenshot-375.png'].forEach(file => {
+  [
+    'screenshot-1440.png',
+    'screenshot-1280.png',
+    'screenshot-768.png',
+    'screenshot-390.png',
+    'screenshot-390-fold.png',
+    'screenshot-375.png',
+    'screenshot-375-fold.png',
+    'form-step-1.png',
+    'form-step-2.png',
+    'form-step-3.png',
+    'form-errors.png',
+    'form-success.png'
+  ].forEach(file => {
     if (fs.existsSync(file)) {
       fs.copyFileSync(file, `${artifactDir}\\${file}`);
       console.log(`Copied ${file} to artifact directory.`);
