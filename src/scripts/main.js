@@ -14,6 +14,7 @@ import { initEstimator } from './estimator.js';
 import { initApplyForm } from './form.js';
 import { initDisclosures } from './disclosures.js';
 import { initMotion } from './motion.js';
+import { initFooter } from './footer.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initNav();
@@ -21,4 +22,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initApplyForm();
   initDisclosures();
   initMotion();
+  initFooter();
 });

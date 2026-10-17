@@ -27,3 +27,5 @@ Thumbs.db
 # Testing & Artifacts
 lighthouse-report.json
 screenshot-*.png
+footer-preview-*.png
+snap-footer.js
